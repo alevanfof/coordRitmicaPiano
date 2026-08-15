@@ -4297,11 +4297,12 @@ input[type="checkbox"] {
     height: 100%;
 }
 
-/* Posición de cada bloque (porcentaje del ancho del piano) */
-.coordRitm_bloqueNegras--do3 { left: 1.2%;  width: 14%; }
-.coordRitm_bloqueNegras--fa3 { left: 22%;   width: 20.4%; }
-.coordRitm_bloqueNegras--do4 { left: 49.1%; width: 14%; }
-.coordRitm_bloqueNegras--fa4 { left: 70.5%; width: 19%; }
+/* Posición de cada bloque (porcentaje del ancho del piano).
+   Regla única para móvil y PC: el celular en landscape queda igual que en escritorio. */
+.coordRitm_bloqueNegras--do3 { left: 5.2%;  width: 14%; top: -68%; padding-right: 3%;  gap: 37%; }
+.coordRitm_bloqueNegras--fa3 { left: 26.6%; width: 21%; top: -68%; padding-right: 3%;  gap: 20%; }
+.coordRitm_bloqueNegras--do4 { left: 55.2%; width: 13%; top: -68%; padding-right: 2%;  gap: 32%; }
+.coordRitm_bloqueNegras--fa4 { left: 76.5%; width: 24%; top: -68%; padding-right: 6%;  gap: 22%; }
 
 /* --- Zona de animaciones (modo desafío) --- */
 
@@ -5362,18 +5363,13 @@ input[type="checkbox"] {
    igual. Aquí se corrige la posición de las teclas negras para
    que usen % del contenedor (no del viewport) y se vean bien.
    ============================================================ */
-@media (min-width: 633px) and (hover: hover) and (pointer: fine) {
+/* En pantallas anchas se capa el piano para que no quede desproporcionado.
+   No afecta al celular (su ancho es menor al tope). */
+@media (min-width: 633px) {
     .coordRitm_piano {
         max-width: 1280px;
         margin: 0 auto;
     }
-
-    /* Bloques de teclas negras — posiciones tuneadas para PC (>=633px).
-       El celular (touch) mantiene los valores base de .coordRitm_bloqueNegras. */
-    .coordRitm_bloqueNegras--do3 { left: 5.2%;  width: 14%; top: -68%; padding-right: 3%;  gap: 37%; }
-    .coordRitm_bloqueNegras--fa3 { left: 26.6%; width: 21%; top: -68%; padding-right: 3%;  gap: 20%; }
-    .coordRitm_bloqueNegras--do4 { left: 55.2%; width: 13%; top: -68%; padding-right: 2%;  gap: 32%; }
-    .coordRitm_bloqueNegras--fa4 { left: 76.5%; width: 24%; top: -68%; padding-right: 6%;  gap: 22%; }
 }
 
 .coordRitm_overlayAviso .coordRitm_overlayConfirmacion_contenido {
