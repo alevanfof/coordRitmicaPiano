@@ -1,0 +1,7 @@
+# Dependencies (none needed — sitio estático)
+node_modules/
+
+# Logs / OS
+*.log
+.DS_Store
+Thumbs.db

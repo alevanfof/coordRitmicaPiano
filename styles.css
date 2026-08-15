@@ -1,0 +1,5841 @@
+/* ============================================
+   ESTILOS DE CLASES
+   ============================================ */
+
+#actividadFrame {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    perspective: 1100px;
+    perspective-origin: 50% 50%;
+    background:
+        radial-gradient(ellipse 120% 80% at 50% 100%, #06060c 0%, #020204 45%, #000000 100%);
+    border-radius: 16px;
+    box-shadow:
+        inset 0 0 28px rgba(0, 0, 0, 0.85),
+        0 10px 30px rgba(0, 0, 0, 0.65);
+}
+
+.stars {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    pointer-events: none;
+    transform-style: preserve-3d;
+    transform-origin: 50% 50%;
+    will-change: transform;
+}
+
+.stars::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+
+    background: white;
+
+    box-shadow:
+        100px 200px #fff,
+        300px 400px #cce,
+        500px 100px #dde,
+        700px 600px #fff,
+        900px 300px #ccd,
+        1200px 800px #eef,
+        1500px 200px #fff,
+        1800px 700px #ccd,
+        2000px 400px #fff;
+
+    filter: drop-shadow(0 0 3px rgba(200, 220, 255, 0.55));
+}
+
+/* Acercamiento a cámara (no caída vertical — evita efecto “nieve”) */
+@keyframes moverEstrellas {
+    from {
+        transform: translateZ(-2200px) scale(0.2);
+    }
+    to {
+        transform: translateZ(480px) scale(1.12);
+    }
+}
+
+.layer1 {
+    animation: moverEstrellas 55s linear infinite;
+    opacity: 0.28;
+}
+
+.layer2 {
+    animation: moverEstrellas 38s linear infinite;
+    opacity: 0.55;
+}
+
+.layer3 {
+    animation: moverEstrellas 19s linear infinite;
+    opacity: 0.95;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+.layer3::after {
+    animation: twinkle 2s infinite;
+}
+
+#actividadFrame::before {
+    content: "";
+    position: absolute;
+    inset: -50%;
+
+    background:
+        radial-gradient(circle at 32% 42%, rgba(18, 28, 52, 0.55), transparent 62%),
+        radial-gradient(circle at 68% 58%, rgba(14, 22, 44, 0.45), transparent 58%);
+
+    filter: blur(72px);
+    opacity: 0.32;
+
+    animation: nebulaMove 48s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes nebulaMove {
+    0% {
+        transform: translate(0px, 0px) scale(1);
+    }
+    100% {
+        transform: translate(-100px, 50px) scale(1.2);
+    }
+}
+
+#actividadFrame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(ellipse at 50% 45%, transparent 0%, transparent 42%, rgba(0, 0, 0, 0.55) 100%);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+}
+
+/* Secuencia warp (clases.js: prewarp ~1.9s → cruise ~5.2s → warp hasta fetch) */
+@keyframes actividadFramePrewarp {
+    0% {
+        transform: scale(1) translate3d(0, 0, 0);
+        filter: brightness(1) saturate(1);
+        box-shadow:
+            inset 0 0 20px rgba(0, 0, 0, 0.6),
+            0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    35% {
+        transform: scale(1.015) translate3d(-2px, 1px, 0);
+        filter: brightness(1.12) saturate(1.15);
+    }
+    70% {
+        transform: scale(1.04) translate3d(2px, -1px, 0);
+        filter: brightness(1.22) saturate(1.25) hue-rotate(-6deg);
+    }
+    100% {
+        transform: scale(1.06) translate3d(0, 0, 0);
+        filter: brightness(1.32) saturate(1.35) hue-rotate(-10deg);
+        box-shadow:
+            inset 0 0 50px rgba(100, 160, 255, 0.35),
+            0 0 40px rgba(120, 180, 255, 0.25),
+            0 10px 30px rgba(0, 0, 0, 0.55);
+    }
+}
+
+@keyframes actividadFrameCruiseDrift {
+    0% {
+        transform: scale(1.06) translate3d(0, 0, 0);
+    }
+    50% {
+        transform: scale(1.07) translate3d(0, -3px, 0);
+    }
+    100% {
+        transform: scale(1.08) translate3d(0, 0, 0);
+    }
+}
+
+@keyframes actividadFrameWarpPulse {
+    0% {
+        filter: brightness(1.45) contrast(1.12) saturate(1.2);
+        transform: scale(1.08) translate3d(0, 0, 0);
+    }
+    100% {
+        filter: brightness(1.75) contrast(1.2) saturate(1.45);
+        transform: scale(1.1) translate3d(0, -2px, 0);
+    }
+}
+
+@keyframes warpNebulaStreak {
+    0% {
+        opacity: 0.85;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(-8%, 4%, 0) scale(1.08);
+    }
+}
+
+#actividadFrame.prewarp {
+    animation: actividadFramePrewarp 1.9s ease-in forwards;
+    will-change: transform, filter;
+}
+
+#actividadFrame.cruise {
+    animation: actividadFrameCruiseDrift 1.1s ease-in-out infinite;
+    filter: brightness(1.28) saturate(1.2);
+    will-change: transform, filter;
+}
+
+#actividadFrame.cruise::before {
+    animation:
+        nebulaMove 18s ease-in-out infinite alternate,
+        warpNebulaStreak 2.8s ease-in-out infinite alternate;
+}
+
+#actividadFrame.warp {
+    animation: actividadFrameWarpPulse 0.32s ease-in-out infinite alternate;
+    will-change: transform, filter;
+    box-shadow:
+        inset 0 0 60px rgba(140, 200, 255, 0.45),
+        0 0 55px rgba(100, 180, 255, 0.4),
+        0 12px 36px rgba(0, 0, 0, 0.6);
+}
+
+#actividadFrame.warp::before {
+    animation:
+        nebulaMove 10s ease-in-out infinite alternate,
+        warpNebulaStreak 0.45s ease-in-out infinite alternate;
+    filter: blur(48px);
+    opacity: 0.95;
+}
+
+#actividadFrame.warp::after {
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.04) 2px,
+            rgba(255, 255, 255, 0.04) 3px
+        ),
+        radial-gradient(circle at center, rgba(255, 255, 255, 0.12), transparent 65%);
+    opacity: 0.9;
+    animation: warpNebulaStreak 0.28s linear infinite;
+}
+
+/* Acelerar capas de estrellas durante cruise / warp (año 1) */
+#actividadFrame.cruise .stars.layer1 {
+    animation-duration: 28s;
+}
+#actividadFrame.cruise .stars.layer2 {
+    animation-duration: 15s;
+}
+#actividadFrame.cruise .stars.layer3 {
+    animation-duration: 7s;
+}
+
+#actividadFrame.warp .stars.layer1 {
+    animation-duration: 9s;
+}
+#actividadFrame.warp .stars.layer2 {
+    animation-duration: 4.5s;
+}
+#actividadFrame.warp .stars.layer3 {
+    animation-duration: 2.2s;
+}
+
+@keyframes warpFlashOut {
+    0% {
+        opacity: 1;
+    }
+    55% {
+        opacity: 0.85;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.warp-flash-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10000;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 45%, #fff 0%, #eaf2ff 35%, rgba(200, 220, 255, 0.4) 70%, transparent 100%);
+    opacity: 0;
+}
+
+.warp-flash-overlay.warp-flash-overlay--run {
+    animation: warpFlashOut 0.7s ease-out forwards;
+    pointer-events: auto;
+}
+
+@keyframes twinkleSoft {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.layer2::after {
+    animation: twinkleSoft 3s infinite ease-in-out;
+}
+
+.layer3::after {
+    animation: twinkleSoft 2s infinite ease-in-out;
+}
+
+#btn-escena {
+    position: absolute;
+    left: 50%;
+    top: 60%;
+    transform: translate(-50%, -50%);
+
+    padding: 14px 28px;
+    background: linear-gradient(145deg, #ffffff, #dcdcdc);
+    color: #222;
+
+    font-weight: bold;
+    letter-spacing: 1px;
+
+    border-radius: 12px;
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 0 #999,
+        0 10px 20px rgba(0, 0, 0, 0.5);
+
+    transition: all 0.15s ease;
+}
+
+#btn-escena:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+#btn-escena:active {
+    transform: translate(-50%, -45%);
+    box-shadow:
+        0 2px 0 #999,
+        0 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* p#texto-intro {
+    background: white;
+} */
+
+/* RESET BÁSICO */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* ESCENA GENERAL */
+.escena {
+    width: 100%;    
+    background: radial-gradient(circle at center, #1a1a1a, #0b0b0b);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* MODAL PRINCIPAL */
+.modal-personaje {
+    height: 100%;
+    width: 90%;
+    max-width: 900px;
+    padding: 30px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, #111, #1c1c1c);
+    border: 2px solid rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+/* TITULO */
+.titulo-escena1TCl1 {
+    text-align: center;
+    font-size: 1rem;
+    color: #f5d36b;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+/* GRID DE AVATARES */
+.avatars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    margin-bottom: 25px;
+}
+
+/* AVATAR */
+.avatars img {
+    width: 100%;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    filter: grayscale(40%);
+    border: 2px solid transparent;
+}
+
+/* HOVER */
+.avatars img:hover {
+    transform: scale(1.08);
+    filter: grayscale(0%);
+}
+
+/* SELECCIONADO */
+.avatars img.selected {
+    border: 2px solid #f5d36b;
+    box-shadow: 0 0 15px rgba(245, 211, 107, 0.6);
+    filter: none;
+}
+
+/* OCULTOS */
+.hidden {
+    display: none;
+}
+
+/* BOTÓN FLOTANTE */
+.btn-avatar-flotante {
+    position: absolute;
+    right: 79%;
+    top: 2%;
+    background: #222;
+    border: 1px solid #f5d36b;
+    color: #f5d36b;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 16%;
+    height: 8%;
+    font-size: 120%;
+}
+
+
+.escena {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    display: none;
+}
+
+.escena.activa {
+    opacity: 1;
+    pointer-events: auto;
+    display: block;
+    left: 5%;
+    margin-top: 2%;
+    position:relative
+}
+
+.intro-box {
+    position: relative;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 25px 30px;
+
+    background: rgba(10, 10, 25, 0.85);
+    border: 2px solid #00f0ff;
+    border-radius: 12px;
+
+    box-shadow:
+        0 0 10px #00f0ff,
+        0 0 25px rgba(0, 240, 255, 0.4),
+        inset 0 0 10px rgba(0, 240, 255, 0.2);
+
+    color: #e0f7ff;
+    font-family: 'Orbitron', sans-serif;
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+
+    backdrop-filter: blur(6px);
+}
+
+/* Efecto borde animado */
+.intro-box::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #00f0ff, #0066ff, #00f0ff);
+    z-index: -1;
+    filter: blur(8px);
+    opacity: 0.6;
+    animation: glowBorder 4s linear infinite;
+}
+
+@keyframes glowBorder {
+    0% { filter: blur(8px) hue-rotate(0deg); }
+    100% { filter: blur(8px) hue-rotate(360deg); }
+}
+
+
+@keyframes fadeInText {
+    to {
+        opacity: 1;
+    }
+}
+
+#texto-intro {
+    color: #e0f7ff;
+    overflow: hidden;
+    white-space: pre-line;
+    border-right: 2px solid #00f0ff;
+    width: 0;
+    animation:
+    fadeInText 0.5s ease forwards,
+    typing 4s steps(120, end) forwards,
+    blink 0.8s infinite;
+    display: inline-block;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
+
+@keyframes fadeInText {
+    to { opacity: 1 }
+}
+
+.titulo-cl1 {
+    display: block;
+    font-size: 1.2rem;
+    color: #00f0ff;
+    margin-bottom: 10px;
+    text-shadow: 0 0 8px #00f0ff;
+}
+
+.titulo {
+    color: #00f0ff;
+    text-shadow: 0 0 10px #00f0ff;
+}
+
+.btn-avatar-flotante:hover {
+    background: #f5d36b;
+    color: #000;
+}
+
+/* PRONOMBRES */
+.pronombres {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn-pronombre {
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid #555;
+    background: #1a1a1a;
+    color: #ccc;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* HOVER PRONOMBRES */
+.btn-pronombre:hover {
+    background: #333;
+}
+
+/* SELECCION PRINCIPAL */
+.selected-main {
+    border: 1px solid #f5d36b;
+    color: #f5d36b;
+    box-shadow: 0 0 10px rgba(245, 211, 107, 0.5);
+}
+
+/* SELECT NOMBRE */
+.nombreProta {
+    display: flex;
+    align-items: center;   /* alinea verticalmente prolijo */
+    white-space: nowrap;   /* 🚫 evita saltos de línea */
+    overflow: hidden;      /* corta lo que se pase */
+}
+
+#selectorNombre {
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    background: #222;
+    color: #fff;
+}
+
+/* TEXTO NOMBRE */
+.nombre-Shonen {
+    margin-top: 1%;
+    font-size: 1.2rem;
+    color: #f5d36b;
+    overflow: hidden;
+    text-overflow: ellipsis; /* agrega "..." si es muy largo */
+    white-space: nowrap;
+}
+
+/* SELECT ARTISTA */
+.sel-ArtistaSec {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #222;
+    color: white;
+    border: none;
+}
+
+/* PREVIEW DIALOGO */
+.preview-dialogo {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 15px;
+    background: #0f0f0f;
+    border: 1px solid #333;
+}
+
+/* HEADER DIALOGO */
+.dialogo-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.dialogo-avatar img {
+    width: 50px;
+    border-radius: 50%;
+    border: 2px solid #f5d36b;
+}
+
+.dialogo-nombre {
+    color: #f5d36b;
+    font-weight: bold;
+}
+
+/* BURBUJA */
+.dialogo-bubble {
+    background: #1c1c1c;
+    padding: 10px;
+    border-radius: 10px;
+    color: #ddd;
+    font-size: 0.95rem;
+}
+
+/* BOTON CONFIRMAR */
+#confirmar-personaje {
+    width: 100%;
+    margin-top: 25px;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(145deg, #f5d36b, #caa94f);
+    color: #000;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+
+    transform: translateY(0);
+    box-shadow: 0 6px 0 #a88b3a, 0 10px 20px rgba(0,0,0,0.25);
+
+    transition: 
+        transform 0.1s ease,
+        box-shadow 0.1s ease,
+        filter 0.2s;
+}
+
+#confirmar-personaje:active {
+    transform: translateY(4px) scale(0.98);
+
+    /* se aplasta la sombra → sensación de contacto */
+    box-shadow: 0 2px 0 #a88b3a, 0 4px 10px rgba(0,0,0,0.2);
+
+    filter: brightness(0.95);
+}
+
+/* HOVER CONFIRMAR */
+#confirmar-personaje:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 20px rgba(245, 211, 107, 0.5);
+}
+
+/* MODAL INFO */
+.info-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-modal active {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 15000;
+}
+
+/* CONTENIDO MODAL */
+.modal-content {
+    background: #111;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #f5d36b;
+    color: white;
+    text-align: center;
+}
+
+/* BOTON CERRAR */
+#cerrarInfoModal {
+    margin-top: 15px;
+    padding: 8px 12px;
+    border: none;
+    background: #f5d36b;
+    color: black;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.comenzar-cl {
+    text-align: center;
+    color: #bbb;
+    font-size: 14px;
+    margin-bottom: 12px;
+
+    padding: 10px 16px;
+
+    background: #2f2f44;
+
+    border-radius: 10px;
+    /* 🔥 fijo, consistente */
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* 🔥 borde sutil */
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        /* luz arriba */
+        0 4px 12px rgba(0, 0, 0, 0.4);
+    /* profundidad */
+
+    opacity: 0.9;
+
+    animation: fadePulse 2s infinite;
+}
+
+@keyframes fadePulse {
+    0% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.4;
+    }
+}
+
+#claseContenedor>div>button {
+    background: #1e1e2f;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    margin: 10px 5px;
+    border-radius: 10px;
+    cursor: pointer;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+}
+
+#claseContenedor>div>button:hover {
+    background: #2f2f44;
+    transform: translateY(-2px);
+}
+
+h1.h1-actividad {
+    background: linear-gradient(145deg, #7fb8e6, #5f95c4);
+    padding: 14px 28px;
+    color: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+    display: inline-block;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 95vw;
+    text-align: center;
+}
+
+h1.h1-actividad:hover {
+    transform: scale(1.05);
+    /* 🔥 se agranda = se acerca */
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.25),
+        0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* TRANSICION */
+
+@keyframes desintegrar3Fases {
+    0% {
+      clip-path: circle(100% at center);
+      opacity: 1;
+      filter: blur(0px);
+    }
+    30% {
+      clip-path: circle(80% at center);
+      opacity: 0.9;
+      filter: blur(2px);
+      transform: scale(1.01);
+    }
+    65% {
+      clip-path: circle(40% at center);
+      opacity: 0.6;
+      filter: blur(6px);
+      transform: scale(1.05);
+    }
+    100% {
+      clip-path: circle(0% at center);
+      opacity: 0;
+      filter: blur(12px);
+      transform: scale(1.1);
+    }
+  }
+  
+  .escena-1.desintegrando {
+    animation: desintegrar3Fases 2s cubic-bezier(0.3, 0, 0.7, 1) forwards;
+  }
+  
+
+/* ESCENA 2 MENU INICIO */
+
+/* Contenedor Principal: Fondo oscuro con viñeta */
+.escena-2 {
+    background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+    overflow: hidden;
+}
+
+/* Header Estilo AAA */
+.ui-header {
+    position: absolute;
+    top: 50px;
+    left: 10%;
+    z-index: 10;
+}
+
+.tit1TCl1esc1 {
+    font-family: 'Cinzel', serif;
+    color: #fff;
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.header-line {
+    width: 100px;
+    height: 2px;
+    background: #f5d36b;
+    margin-top: 10px;
+    box-shadow: 0 0 15px #f5d36b;
+}
+
+/* Menú Container */
+.menu-aaa-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 10%;
+    gap: 150px; /* Espacio para la descripción */
+}
+
+.menu-opciones {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Las Opciones */
+.opcion-menu {
+    font-family: 'Cinzel', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.2);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    position: relative;
+    padding: 10px 0;
+}
+
+.opcion-menu:hover:not(.bloqueada) {
+    color: #fff;
+    transform: translateX(30px);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* La línea de brillo debajo del texto al hacer hover */
+.glow-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background: linear-gradient(90deg, #f5d36b, transparent);
+    transition: width 0.5s ease;
+}
+
+.opcion-menu:hover .glow-line {
+    width: 150%;
+}
+
+/* Panel de descripción (Game Feel de información) */
+.descripcion-panel {
+    border-left: 1px solid rgba(245, 211, 107, 0.2);
+    padding-left: 40px;
+    max-width: 300px;
+    animation: fadeIn 1s ease;
+}
+
+#menu-desc {
+    color: #f5d36b;
+    font-family: 'Segoe UI', sans-serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    letter-spacing: 1px;
+}
+
+/* Bloqueado */
+.opcion-menu.bloqueada {
+    font-size: 2rem;
+    opacity: 0.15;
+    filter: grayscale(1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- ESTILOS PARA EL BOTÓN VOLVER (GOW Style) --- */
+.btn-volver-aaa {
+    position: absolute;
+    bottom: 60px; /* Separado del footer */
+    right: 5%;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.4); /* Apagado por defecto */
+    font-family: 'Segoe UI', sans-serif; /* Fuente limpia, no serif */
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    z-index: 20;
+}
+
+.flecha-curva {
+    font-size: 1.4rem; /* La flecha es el protagonista visual */
+    transform: rotateY(0deg); /* Preparado para animación */
+    transition: transform 0.3s ease;
+}
+
+.texto-volver {
+    opacity: 0.6;
+}
+
+/* Hover Efecto AAA */
+.btn-volver-aaa:hover {
+    color: #f5d36b;
+    transform: scale(1.05);
+    text-shadow: 0 0 10px rgba(245, 211, 107, 0.6);
+}
+
+.btn-volver-aaa:hover .flecha-curva {
+    transform: translateX(-5px) rotateY(180deg); /* Animación sutil de la flecha */
+}
+
+/* --- ESTILOS PARA EL FOOTER (UI Overlay) --- */
+.ui-footer {
+    position: absolute;
+    bottom: 25px; /* Subimos un pelín para que no quede pegado al borde físico */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.ui-footer p {
+    font-family: 'Segoe UI', sans-serif;
+    /* Subimos la opacidad base de 0.2 a 0.5 para que sea legible */
+    color: rgba(255, 255, 255, 0.5); 
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    margin: 0;
+    text-transform: uppercase;
+    
+    /* 🔹 EL TOQUE DE LUZ: 
+       Añadimos una sombra de texto blanca muy difuminada 
+       que simula la retroiluminación de un monitor */
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    
+    /* Añadimos una transición por si luego quieres quitarle el pointer-events 
+       y que reaccione al pasar el mouse */
+    transition: all 0.5s ease;
+}
+
+/* Opcional: Si quieres que el nombre del Prof. brille un poco más que el año */
+.ui-footer p strong, 
+.ui-footer p span#nombre-prof {
+    color: rgba(245, 211, 107, 0.7); /* El dorado de tu tema, pero suave */
+    text-shadow: 0 0 10px rgba(245, 211, 107, 0.4);
+}
+/* ============================================
+   VARIABLES Y ESTILOS BASE (MOBILE-FIRST)
+   ============================================ */
+
+:root {
+    /* Colores */
+    --color-primary: #007bff;
+    --color-primary-dark: #0056b3;
+    --color-secondary: #5C6BC0;
+    --color-secondary-dark: #3f51b5;
+    --color-text: #3c4043;
+    --color-text-light: #90bfda;
+    --color-border: #dadce0;
+    --color-bg: #f8f9fa;
+    --color-white: #ffffff;
+    --color-primary: #007bff;
+    --color-primary-dark: #0056b3;
+
+    /*Fuentes */
+    --font-body: 'Inter', sans-serif;
+    --font-heading: 'Poppins', sans-serif;
+
+    /* Espaciado */
+    --spacing-xs: 5px;
+    --spacing-sm: 10px;
+    --spacing-md: 15px;
+    --spacing-lg: 20px;
+    --spacing-xl: 30px;
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 50%;
+
+    /* Sombras */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+}
+
+/* Reset y estilos base */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    /* CAMBIAR de 'Segoe UI'... a esto */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+}
+
+/* ============================================
+   NAVBAR (MOBILE)
+   ============================================ */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #1e90ff 0%, #0047ab 100%);
+    font-family: var(--font-heading);
+    /* AGREGAR ESTO */
+    color: var(--color-white);
+    padding: var(--spacing-sm);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    z-index: 1000;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 0 8px rgba(255, 255, 255, 0.1);
+    user-select: none;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    flex: 1;
+    min-width: 0;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.school-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.school-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.nav-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav-title a {
+    color: var(--color-white);
+    text-decoration: none;
+}
+
+.nav-title a:hover {
+    color: rgb(193, 220, 243);
+}
+
+.student-info {
+    display: none;
+    align-items: center;
+    gap: var(--spacing-md);
+    font-size: 12px;
+}
+
+.school-name,
+.course-name {
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.nav-link {
+    color: var(--color-white);
+    text-decoration: none;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-weight: bold;
+    font-size: 12px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #f1c40f;
+    cursor: pointer;
+}
+
+.help-drag-bar {
+    cursor: grab;
+    padding: 5px;
+    background: var(--color-primary);
+    color: white;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+    user-select: none;
+}
+
+.help-drag-bar:active {
+    cursor: grabbing;
+}
+
+.help-btn {
+    width: auto;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: none;
+    border: none;
+    color: var(--color-white);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#progressBarContainer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: transparent;
+}
+
+#progressBar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #ffc107, #28a745);
+    transition: width 0.2s ease;
+}
+
+/* ============================================
+   MAIN CONTAINER (MOBILE)
+   ============================================ */
+
+.ghost {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+
+#navbar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.main-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    margin-top: 70px;
+    padding: var(--spacing-md);
+    flex: 1;
+}
+
+/* ============================================
+   AJUSTES FLATPICKR (UNIFICACIÓN DE DISEÑO)
+   ============================================ */
+
+/* Asegura que el contenedor ocupe todo el ancho disponible */
+#contenedorFecha {
+    width: 100%;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Forzamos al input de Flatpickr a verse igual que tus otros inputs */
+.flatpickr-input {
+    width: 100% !important;
+    /* Crucial para que no se achique */
+    background-color: var(--color-white) !important;
+    cursor: pointer;
+}
+
+/* Ajuste del calendario para que no se vea gigante en mobile */
+.flatpickr-calendar {
+    font-family: var(--font-body) !important;
+}
+
+/* Aseguramos que el contenedor sea un bloque completo */
+#contenedorFecha {
+    width: 100%;
+    display: flex;
+    /* Usamos flex para que los hijos se alineen bien */
+    flex-direction: column;
+}
+
+/* Estilo para el input que crea Flatpickr (altInput) */
+#contenedorFecha .flatpickr-input[type="text"] {
+    width: 100% !important;
+    padding: var(--spacing-sm);
+    /* Usa tu variable de espaciado */
+    margin: var(--spacing-xs) 0;
+    /* Igual que tus otros inputs */
+    border-radius: var(--radius-sm);
+    border: 1px solid #ccc;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    background-color: var(--color-white);
+    box-sizing: border-box;
+    /* Fundamental para que el padding no lo agrande */
+}
+
+/* Por si Flatpickr envuelve el input en un div wrapper */
+#contenedorFecha .flatpickr-wrapper {
+    width: 100%;
+}
+
+/* ============================================
+   Carrusel Actividad Video Intro 1 1er Trim
+   ============================================ */
+
+.actividad-modal {
+    display: none;
+    /* oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    /* scroll vertical si hace falta */
+    overflow-x: hidden;
+    /* oculta scroll horizontal */
+    scrollbar-width: none;
+}
+
+.actividad-modal-content {
+    background: #fff;
+    padding: 2vw;
+    border-radius: 8px;
+    width: 100%;
+    height: 80%;
+    max-width: 600px;
+    margin-left: 1vw;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 16vw;
+}
+
+.modal-carousel {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    /* opcional */
+    margin: 0 auto;
+    overflow-y: auto;
+    /* mantiene el scroll vertical */
+    overflow-x: hidden;
+    height: 130vw;
+    /* oculta lo que se sale */
+}
+
+#actIntrVid1_videoWrapper:fullscreen {
+    overflow-y: auto;
+}
+
+#actIntrVid1_videoWrapper:-webkit-full-screen {
+    overflow-y: auto;
+}
+
+.actIntrVid1_overlay {
+    position: absolute;
+    z-index: 5;
+}
+
+/* parte superior */
+.actIntrVid1_overlay.top {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+}
+
+/* parte inferior */
+.actIntrVid1_overlay.bottom {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+}
+
+/* lado izquierdo */
+.actIntrVid1_overlay.left {
+    top: 40%;
+    left: 0;
+    width: 35%;
+    height: 20%;
+}
+
+/* lado derecho */
+.actIntrVid1_overlay.right {
+    top: 40%;
+    right: 0;
+    width: 35%;
+    height: 20%;
+}
+
+/* overlay central */
+.actIntrVid1_overlay.center {
+    position: absolute;
+    top: 40%;
+    left: 35%;
+    width: 30%;
+    height: 20%;
+    z-index: 10;
+    cursor: not-allowed;
+    display: none;
+    /* inicialmente oculto */
+}
+
+.marcaPregunta {
+    position: absolute;
+    position: relative;
+    top: 0;
+    width: 4px;
+    height: 1px;
+    margin-bottom: -4vh;
+    margin-top: 4vh;
+    transform: translateX(-50%);
+}
+
+/* estados */
+
+.markPending {
+    background: gray;
+    color: gray;
+}
+
+.markAnswered {
+    background: #8699aa;
+    color: #8699aa;
+}
+
+.markCorrect {
+    background: #28a745;
+    color: #28a745;
+}
+
+.markWrong {
+    background: #dc3545;
+    color: #dc3545;
+}
+
+/* pin */
+
+.markReached::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: currentColor;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    left: -5px;
+    top: -18px;
+    z-index: 20;
+}
+
+.markReached::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    left: -1px;
+    top: -13px;
+    z-index: 21;
+}
+
+#actIntrVid1_contenedorPreguntas {
+
+    position: relative;
+    inset: 0;
+    z-index: 10000;
+
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 6vh;
+
+    overflow-y: auto;
+    background-color: white;
+}
+
+input[type="range"] {
+    padding: 0;
+}
+
+/* .carousel-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease;
+} */
+
+/* ============================================
+   Carrusel diagnostico
+   ============================================ */
+
+/* Ocultás el modal entero */
+#carousel {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    /* opcional */
+    margin: 0 auto;
+    overflow-y: auto;
+    /* mantiene el scroll vertical */
+    overflow-x: hidden;
+    height: 130vw;
+    /* oculta lo que se sale */
+}
+
+#modalBody {
+    margin-left: 4vw;
+    background: white;
+    border-radius: 5%;
+    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.2), -8px -8px 16px rgba(255, 255, 255, 0.7);
+}
+
+/* Ocultar scrollbar en navegadores WebKit (Chrome, Safari, Edge) */
+#carousel::-webkit-scrollbar {
+    width: 0px;
+    /* ancho cero */
+    background: transparent;
+    /* fondo transparente */
+}
+
+#diagnosticoModal {
+    display: none;
+    /* oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    /* scroll vertical si hace falta */
+    overflow-x: hidden;
+    /* oculta scroll horizontal */
+    scrollbar-width: none;
+}
+
+.zodiac-item.selected {
+    background-color: #e0e0e0;
+    /* gris claro */
+    border-radius: 8px;
+    user-select: none;
+    box-shadow: inset 2px 2px 5px #aaa, inset -2px -2px 5px #fff;
+    transform: translateY(2px);
+}
+
+#drag-tooltip {
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    transform: translate(-50%, -130%);
+
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+
+    pointer-events: none;
+
+    opacity: 0;
+    transition: opacity .15s ease;
+
+    white-space: nowrap;
+    z-index: 9999;
+}
+
+#drag-tooltip.visible {
+    opacity: 1;
+}
+
+/*que bueno tener un modal, coment para arreglar env var*/
+.modal {
+    display: none;
+    /* oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/*Ambiguedad arreglada, habia multiples .modal-content*/
+.modal-content {
+    background: #fff;
+    padding: 2vw;
+    border-radius: 8px;
+    width: 100%;
+    height: 80%;
+    max-width: 600px;
+    margin-left: 1vw;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 16vw;
+}
+
+#closeModal {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease;
+}
+
+.slide.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.slide.exit-left {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.slide.exit-right {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.zodiac-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    margin: 20px 0;
+    user-select: none;
+    cursor: pointer;
+}
+
+.zodiac-item {
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.zodiac-item .icon {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.zodiac-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.video-container {
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+}
+
+.chip-input {
+    margin-top: 4vw;
+}
+
+#chipsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.chip {
+    background-color: #e0e0e0;
+    border-radius: 16px;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.chip span {
+    margin-right: 8px;
+}
+
+.chip .remove {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.video-container {
+    position: relative;
+}
+
+.video-container iframe {
+    position: relative;
+    z-index: 1;
+}
+
+.video-container iframe {
+    pointer-events: none;
+}
+
+#controls {
+    flex-direction: row;
+    display: flex;
+}
+
+.custom-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+    user-select: none;
+    cursor: pointer;
+}
+
+.custom-controls button {
+    width: 20vw;
+    /* cada botón ocupa 20% del ancho de la ventana */
+    height: 50px;
+    font-size: 1.5rem;
+    /* tamaño del ícono */
+    background: #222;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.custom-controls button:hover {
+    background: #444;
+}
+
+#videoWrapper iframe {
+    width: 100%;
+    height: 60%;
+}
+
+#videoWrapper {
+    width: 100%;
+    height: 100%;
+}
+
+
+.music-slider {
+    display: flex;
+    overflow: hidden;
+    gap: 10px;
+    /* animation: scroll-left 80s linear infinite; */
+    scroll-behavior: smooth;
+    width: 100%;
+    cursor: grab;
+    -webkit-overflow-scrolling: touch;
+    user-select: none;
+    touch-action: pan-y;
+    /* mucho más rápido */
+}
+
+.music-track {
+    display: flex;
+    gap: 20px;
+    width: max-content;
+    overflow-x: auto;
+
+    scrollbar-width: none;
+}
+
+.music-track::-webkit-scrollbar {
+    display: none;
+}
+
+.music-item {
+    flex-shrink: 0;
+}
+
+.suggestion-slider,
+#carousel,
+#diagnosticoModal {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* evita rebotes raros */
+}
+
+
+
+@keyframes scroll-left {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+
+.modalRep-content {
+    margin-top: 30vw;
+}
+
+.music-slider::-webkit-scrollbar {
+    display: none;
+    /* opcional: ocultar scrollbar */
+}
+
+.music-slider:active {
+    cursor: grabbing;
+}
+
+.music-item {
+    flex: 0 0 auto;
+    /* evita que se achiquen */
+    width: 200px;
+    height: 32vw;
+    /* ancho fijo de cada bloque */
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.2),
+        -6px -6px 12px rgba(255, 255, 255, 0.7);
+    text-align: center;
+}
+
+.music-item img {
+    width: 100%;
+    border-radius: 8px;
+    height: 25vw;
+    pointer-events: none;
+    -webkit-user-drag: none;
+}
+
+.music-item:hover {
+    transform: scale(1.05);
+}
+
+.music-item.selected {
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    box-shadow: inset 2px 2px 5px #aaa, inset -2px -2px 5px #fff;
+    transform: translateY(2px);
+}
+
+#expectativas {
+    width: 90vw;
+    margin-left: 2vw;
+    position: relative;
+    height: 30vw;
+}
+
+#conocimientoMusica {
+    width: 90vw;
+    margin-left: 1vw;
+    position: relative;
+    height: 30vw;
+    margin-top: 1vw;
+}
+
+.progressContainer {
+    position: relative;
+    width: 100%;
+}
+
+#videoProgressBar {
+    width: 100%;
+    margin-top: 4vw;
+}
+
+#chipsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.chip {
+    background-color: #e0e0e0;
+    border-radius: 16px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.chip .close {
+    margin-left: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.question-counter {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+    text-align: center;
+    color: #444;
+    user-select: none;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+
+
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #222;
+    text-shadow: 1px 1px 2px #aaa;
+    user-select: none;
+}
+
+.modal-content ul {
+    list-style: decimal;
+    padding-left: 20px;
+}
+
+.modal-content li {
+    opacity: 0;
+    transform: translateY(10px);
+    font-weight: bold;
+    color: #333;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: aparecerLinea 0.6s forwards;
+}
+
+@keyframes aparecerLinea {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.suggestion-slider {
+    position: relative;
+    width: 340px;
+    height: 280px;
+    /* ajusta según tu diseño */
+    margin: auto;
+    overflow: hidden;
+}
+
+.frame {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    /* todos empiezan fuera de vista a la derecha */
+    width: 100%;
+    height: 100%;
+    transition: left 0.8s ease-in-out;
+}
+
+.frame.active {
+    left: 0;
+    /* el frame activo ocupa el cuadrado */
+}
+
+.text-container {
+    background: #fff;
+    padding: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+    border-top: 1px solid #ddd;
+    height: 200px;
+    /* o lo que quieras mostrar */
+    overflow: hidden;
+    /* todo lo que se salga se oculta */
+    position: relative;
+}
+
+.scrolling-text {
+    margin: 0;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow: hidden;
+    display: block;
+    color: white;
+    -webkit-text-stroke: 1px black;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    user-select: none;
+}
+
+.frame::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+    pointer-events: none;
+}
+
+
+.suggestion-slider {
+    display: flex;
+    overflow-x: hidden;
+    /* oculta scroll manual si querés */
+    width: 100%;
+}
+
+.frame {
+    flex: 0 0 100%;
+    /* cada frame ocupa todo el ancho */
+    text-align: center;
+    position: relative;
+}
+
+.frame img {
+    width: 100%;
+    height: 60%;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    transform: perspective(800px) translateZ(0);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* efecto hover */
+.frame img:hover {
+    transform: perspective(800px) scale(1.05) rotateX(2deg) rotateY(-2deg);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+}
+
+.text-container {
+    padding: 1rem;
+    height: 40%;
+    /* espacio para el texto */
+    overflow: hidden;
+}
+
+.scrolling-text {
+    margin: 0;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow: hidden;
+    display: block;
+    color: white;
+    -webkit-text-stroke: 1px black;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    animation-fill-mode: forwards;
+}
+
+@keyframes scrollUp {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(var(--scroll-distance));
+    }
+}
+
+
+/* ============================================
+   CONTENEDOR GENERAL (MOBILE)
+   ============================================ */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 100%;
+    z-index: 2;
+}
+
+.container h2 {
+    text-align: center;
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--color-primary);
+    font-size: 18px;
+    margin-top: 4vw;
+    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.2), -8px -8px 16px rgba(255, 255, 255, 0.7);
+    background-color: white;
+    width: 80vw;
+    border-radius: 5%;
+}
+
+.container label {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    background-color: #e3e3e3;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+}
+
+.container label:hover {
+    background-color: #d1d1d1;
+    transform: scale(1.03);
+}
+
+.container select {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid #ccc;
+    text-align: start;
+    font-size: 14px;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ============================================
+   INPUTS Y BOTONES (MOBILE)
+   ============================================ */
+
+input,
+button {
+    width: 100%;
+    padding: var(--spacing-sm);
+    margin: var(--spacing-xs) 0;
+    border-radius: var(--radius-sm);
+    border: 1px solid #ccc;
+    font-family: var(--font-heading);
+    /* AGREGAR ESTO */
+    font-size: 14px;
+}
+
+button {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    border: none;
+}
+
+button:hover {
+    background-color: var(--color-secondary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* ============================================
+   TARJETAS (MOBILE)
+   ============================================ */
+
+.grid-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    width: 100%;
+}
+
+.card-item {
+    background: var(--color-white);
+    border: 1px solid #e0e0e0;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    min-height: 120px;
+}
+
+.card-item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    border-color: var(--color-primary);
+}
+
+.card-icon {
+    font-size: 28px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.card-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+/* ============================================
+   FRAME MODERNO (MOBILE)
+   ============================================ */
+
+.frame-moderno {
+    width: 100%;
+    min-height: 300px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: #f8f9fa;
+    margin-top: var(--spacing-md);
+    overflow: hidden;
+}
+
+.nav-header {
+    background: var(--color-white);
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.btn-back {
+    background-color: var(--color-primary) !important;
+    color: var(--color-white) !important;
+    padding: var(--spacing-xs) var(--spacing-md) !important;
+    width: auto !important;
+    border: none !important;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: var(--color-primary-dark) !important;
+}
+
+#titulo-actual {
+    font-weight: bold;
+    color: var(--color-text);
+}
+
+/* ============================================
+   MENSAJE MATERIAL (MOBILE - SIMPLIFICADO)
+   ============================================ */
+
+#mensajeMaterial {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    padding: var(--spacing-lg);
+    font-size: 16px;
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--color-text-light);
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-md);
+    text-align: center;
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+/* ============================================
+   FORMULARIO LOGIN (MOBILE)
+   ============================================ */
+
+#pagLogin {
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--color-primary);
+}
+
+#loginForm {
+    width: 100%;
+}
+
+/* ============================================
+   SPINNER (MOBILE)
+   ============================================ */
+
+.spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid var(--color-primary);
+    border-radius: var(--radius-full);
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: var(--spacing-lg) auto;
+}
+
+.spinner2 {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--color-primary);
+    border-radius: var(--radius-full);
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    margin: var(--spacing-md) auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#loadingSpinner {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* ============================================
+   ENTREGA DE CLASES (MOBILE)
+   ============================================ */
+
+#muestraEntregas {
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    min-height: 180px;
+    color: #1a2a4f;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+    background-color: #c3d9f5;
+    margin-top: var(--spacing-xs);
+    line-height: 1.6;
+    font-size: 14px;
+    white-space: pre-line;
+}
+
+#muestraEntregas:hover {
+    transform: translateY(-4px);
+    box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* Estados de entrega */
+#muestraClase {
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    color: var(--color-white);
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.estadoNoFinalizada {
+    background: linear-gradient(to bottom, #fcf9dc, #ffed4b);
+    border: 2px solid #FFEB3B;
+    color: #1a1a1a;
+}
+
+.estadoSinEntregar {
+    background: linear-gradient(to bottom, #FFCDD2, #FFEBEE);
+    border: 2px solid #F44336;
+    color: #1a1a1a;
+}
+
+.estadoARevisar {
+    background: linear-gradient(to bottom, #FF7043, #FFAB91);
+    border: 2px solid #FF5722;
+}
+
+.estadoEntregaTarde {
+    background: linear-gradient(to bottom, #81D4FA, #B3E5FC);
+    border: 2px solid #039BE5;
+    color: #1a1a1a;
+}
+
+.estadoEntregaTermino {
+    background: linear-gradient(to bottom, #64B5F6, #BBDEFB);
+    border: 2px solid #1976D2;
+    color: #1a1a1a;
+}
+
+.recuadro:hover {
+    transform: translateY(-4px);
+    box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   CÁMARA Y FRAMES (MOBILE)
+   ============================================ */
+
+#cameraContainer {
+    position: relative;
+    width: 100%;
+    margin-top: var(--spacing-lg);
+}
+
+video {
+    border: 2px solid #000;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+}
+
+.capture-circle {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-full);
+    background-color: rgba(255, 255, 255, 0.242);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
+}
+
+#faceFrame,
+#surNFrame,
+#fecNaFrame,
+#dniFrame {
+    position: absolute;
+    font-family: 'Courier New', Courier, monospace;
+    border: 2px solid #ff562220;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.225);
+}
+
+#faceFrame {
+    font-size: 320%;
+    top: 35%;
+    left: 5%;
+    width: 35%;
+    height: 28%;
+    color: #ffffff21;
+}
+
+#surNFrame {
+    font-size: 60%;
+    top: 33%;
+    left: 42.1%;
+    width: 21%;
+    height: 11%;
+    color: #ffffff3e;
+}
+
+#fecNaFrame {
+    font-size: 48%;
+    top: 52%;
+    left: 42.1%;
+    width: 38%;
+    height: 4%;
+    color: #ffffff3e;
+}
+
+#dniFrame {
+    font-size: 64%;
+    top: 68%;
+    left: 5.5%;
+    width: 32%;
+    height: 4%;
+    color: #ffffff74;
+}
+
+/* ============================================
+   WELCOME MESSAGE (MOBILE)
+   ============================================ */
+
+#welcomeMessage {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    width: 100%;
+}
+
+/* ============================================
+   HELP Y TOOLTIPS (MOBILE)
+   ============================================ */
+
+/* La clase mágica para la palabra */
+.texto-vivo {
+    display: inline-block;
+    font-weight: 800;
+    /* Degradado moderno: azul, violeta, naranja (puedes cambiar los colores) */
+    background: linear-gradient(to right, #4facfe 0%, #00f2fe 45%, #f093fb 55%, #f5576c 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* Animación de movimiento de color y un pulso de brillo */
+    animation: brilloFluido 3s linear infinite, pulsoSuave 2s ease-in-out infinite;
+}
+
+/* Efecto Respiración Prime */
+.recuadro-prime {
+    position: relative;
+    outline: 2px solid rgba(0, 123, 255, 0.5) !important;
+    /* Un azul moderno */
+    outline-offset: 3px;
+    border-radius: 4px;
+    transition: all 0.3s ease-in-out;
+    /* La sombra no titila, "respira" */
+    animation: breathing-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes breathing-glow {
+    0% {
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+        outline-color: rgba(0, 123, 255, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(0, 123, 255, 0.6);
+        outline-color: rgba(0, 123, 255, 0.8);
+    }
+
+    100% {
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+        outline-color: rgba(0, 123, 255, 0.3);
+    }
+}
+
+/* Estilo del texto destacado */
+.tooltip-ayuda {
+    text-decoration: underline dotted #6d28d9;
+    /* Color de tu marca */
+    font-weight: bold;
+    cursor: help;
+    position: relative;
+    color: #6d28d9;
+
+    /* --- ESTO EVITA LA SELECCIÓN EN CELULARES --- */
+    -webkit-user-select: none;
+    /* Safari y Chrome en móvil */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE/Edge antiguo */
+    user-select: none;
+    /* Estándar */
+
+    /* Evita el recuadro azul de selección al tocar en Android */
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* La burbuja (oculta por defecto) */
+.tooltip-ayuda::after {
+    content: attr(data-info);
+    /* Toma el texto del atributo data-info */
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    background-color: #333;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: normal;
+    width: 200px;
+    /* Ancho de la burbuja */
+    z-index: 10000;
+    transition: all 0.2s ease-in-out;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Flechita de la burbuja */
+.tooltip-ayuda::before {
+    content: "";
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    border-width: 8px 8px 0 8px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+    transition: all 0.2s ease-in-out;
+    opacity: 0;
+}
+
+/* Mostrar al hacer hover o mantener presionado */
+.tooltip-ayuda:hover::after,
+.tooltip-ayuda:active::after,
+.tooltip-ayuda:focus::after {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+}
+
+.tooltip-ayuda:hover::before,
+.tooltip-ayuda:active::before,
+.tooltip-ayuda:focus::before {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+}
+
+/* El efecto de la palabra hundiéndose */
+.efecto-presionar {
+    display: inline-block;
+    font-weight: bold;
+    color: #007bff;
+    /* O el color principal de tu web */
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    /* Estado inicial: Con relieve (afuera) */
+    text-shadow:
+        0 1px 0 #ccc,
+        0 2px 0 #c9c9c9,
+        0 3px 0 #bbb,
+        0 4px 0 #b9b9b9;
+    transform: translateY(-4px);
+
+    /* Animación cíclica que simula el clic */
+    animation: pulsar-tecla 2s infinite;
+}
+
+@keyframes pulsar-tecla {
+
+    0%,
+    100% {
+        transform: translateY(-4px);
+        text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9;
+    }
+
+    50% {
+        /* Estado hundido: Plano (adentro) */
+        transform: translateY(0);
+        text-shadow: none;
+    }
+}
+
+.contenedor-escritura {
+    display: inline-block;
+    width: 7.5ch;
+    vertical-align: middle;
+    text-align: left;
+
+    /* --- PROPIEDADES ANTI-INTERACCIÓN --- */
+    user-select: none;
+    /* No permite seleccionar el texto (azul) */
+    -webkit-user-select: none;
+    /* Para Safari/Chrome */
+    -moz-user-select: none;
+    /* Para Firefox */
+    -ms-user-select: none;
+    /* Para IE/Edge Antiguo */
+
+    pointer-events: none;
+    /* "Not clickable": Los clics pasan de largo */
+    cursor: default;
+    /* Que no muestre la barrita de texto 'I' */
+}
+
+.efecto-escribir {
+    display: inline-block;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: #007bff;
+    overflow: hidden;
+    border-right: 3px solid #007bff;
+    white-space: nowrap;
+    width: 0;
+    /* La animación ya no afecta al 'contenedor-escritura', solo a esta sub-clase */
+    animation:
+        escritura-suave 3.5s steps(7, end) infinite,
+        parpadeo-cursor 0.8s step-end infinite;
+}
+
+@keyframes escritura-suave {
+    0% {
+        width: 0;
+    }
+
+    45%,
+    85% {
+        width: 7.2ch;
+    }
+
+    /* Se expande dentro de su reserva */
+    100% {
+        width: 0;
+    }
+}
+
+@keyframes parpadeo-cursor {
+
+    from,
+    to {
+        border-color: transparent;
+    }
+
+    50% {
+        border-color: #007bff;
+    }
+}
+
+/* Estilo cuando el input está enfocado durante la guía */
+#correoInput.recuadro-prime:focus {
+    background-color: rgba(0, 123, 255, 0.05) !important;
+    /* Un azul casi invisible */
+    border-color: #007bff !important;
+    transition: background-color 0.5s ease;
+    color: #333;
+}
+
+/* Si quieres un efecto más "fuerte" de relleno */
+#correoInput.recuadro-prime {
+    transition: all 0.4s ease;
+}
+
+/* Opcional: Si querés un toque más sofisticado (Dorado Champagne) */
+.recuadro-prime-gold {
+    outline: 2px solid rgba(212, 175, 55, 0.5) !important;
+    animation: breathing-gold 2.5s ease-in-out infinite;
+}
+
+@keyframes breathing-gold {
+
+    0%,
+    100% {
+        box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(212, 175, 55, 0.7);
+    }
+}
+
+/* Animación para que el degradado se mueva */
+@keyframes brilloFluido {
+    to {
+        background-position: 200% center;
+    }
+}
+
+/* Animación para que la palabra tenga un 'latido' visual */
+@keyframes pulsoSuave {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+    }
+
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+    }
+}
+
+/* Hacemos que el cartel sea más ancho de lo normal */
+.ayuda-ancha {
+    min-width: 350px !important;
+    /* Ancho mínimo para que se expanda a los lados */
+    max-width: 500px !important;
+    /* Ancho máximo para que no sea una tira infinita */
+}
+
+/* En celulares, que ocupe casi toda la pantalla para no tapar hacia arriba */
+@media (max-width: 480px) {
+    .ayuda-ancha {
+        min-width: 90% !important;
+        max-width: 95% !important;
+    }
+}
+
+/* Clase que aplicaremos al botón */
+.titilar-guia {
+    animation: blink-animation 1s steps(5, start) infinite;
+    -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+
+@-webkit-keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+
+/* Ajusta el tamaño de la letra de la descripción del driver */
+.driver-popover-description {
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+    color: #333 !important;
+}
+
+/* Ajusta el título para que resalte más */
+.driver-popover-title {
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+
+.tooltip {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: var(--color-white);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    width: 250px;
+    text-align: center;
+    z-index: 998;
+    pointer-events: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-lg);
+}
+
+.help-btn:hover+.tooltip {
+    display: block;
+}
+
+.help-overlay {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 70px);
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.help-content {
+    background: var(--color-white);
+    padding: var(--spacing-lg);
+    border-radius: var(--spacing-lg);
+    text-align: center;
+    max-width: 90%;
+    max-width: 300px;
+    position: fixed;
+    top: calc(100vh - 280px);
+    left: calc(100vw - 360px);
+}
+
+.close-btn {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--color-text);
+}
+
+.help-footer {
+    margin-top: var(--spacing-md);
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: center;
+}
+
+.help-footer button {
+    flex: 1;
+    padding: var(--spacing-sm) !important;
+    width: auto !important;
+}
+
+#stepCounter {
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
+.highlight {
+    outline: 3px solid red;
+    border-radius: var(--radius-sm);
+    transition: 0.3s;
+}
+
+/* ============================================
+   CHECKBOXES Y CUSTOM
+   ============================================ */
+
+input[type="checkbox"] {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: var(--spacing-xs);
+    cursor: pointer;
+}
+
+.opcion-voto input[type="checkbox"] {
+    margin: 0 var(--spacing-sm) 0 0;
+    accent-color: var(--color-secondary);
+}
+
+/* ============================================
+   MENÚ MOBILE (MOBILE)
+   ============================================ */
+
+/* Mobile-first: por defecto ocultar elementos desktop */
+.desktop-only {
+    display: none !important;
+    /* Oculto en móvil */
+}
+
+.hamburger {
+    display: block;
+    /* Visible en móvil */
+    background: none;
+    border: none;
+    color: var(--color-white);
+    font-size: 20px;
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    width: auto !important;
+    font-family: var(--font-heading);
+}
+
+.mobile-menu {
+    display: none;
+    /* Oculto por defecto */
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background-color: var(--color-primary);
+    flex-direction: column;
+    width: 200px;
+    border-radius: 0 0 0 var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 999;
+}
+
+.mobile-menu.active {
+    display: flex;
+    /* Se muestra cuando está activo */
+}
+
+.menu-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 998;
+}
+
+.menu-backdrop.active {
+    display: block;
+}
+
+.mobile-menu-item {
+    color: var(--color-white);
+    padding: var(--spacing-sm) var(--spacing-md) !important;
+    text-align: left;
+    border: none !important;
+    background: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    display: block;
+    font-family: var(--font-body) !important;
+    font-size: 14px !important;
+    font-weight: 500;
+}
+
+.mobile-menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    transform: none !important;
+}
+
+/* Desktop: 434px+ */
+@media (min-width: 434px) {
+
+    .hamburger {
+        display: none;
+    }
+
+    /* 🔥 MODO USUARIO visible en desktop */
+    .hamburger.user-mode {
+        display: block !important;
+    }
+
+    /* 🔥 IMPORTANTE: sacamos el !important */
+    .mobile-menu {
+        display: none;
+    }
+
+    .desktop-only {
+        display: block !important;
+    }
+}
+
+/* ============================================
+   MEDIA QUERIES - TABLET (MIN 600px)
+   ============================================ */
+
+@media (min-width: 600px) {
+    .main-container {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .student-info {
+        display: flex !important;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+    .grid-cards {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+
+    .nav-title {
+        font-size: 16px;
+    }
+}
+
+/* ============================================
+   MEDIA QUERIES - DESKTOP (MIN 900px)
+   ============================================ */
+
+@media (min-width: 900px) {
+    .main-container {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+    .grid-cards {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .card-icon {
+        font-size: 32px;
+    }
+
+    .nav-title {
+        font-size: 18px;
+    }
+}
+
+/* ============================================
+   PERFIL USUARIO
+   ============================================ */
+
+.perfil-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2000;
+    backdrop-filter: blur(4px);
+}
+
+.perfil-modal-overlay.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.perfil-modal {
+    margin-top: 18vh;
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    width: 90%;
+    max-width: 420px;
+    position: relative;
+    animation: modalSlideIn 0.25s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.perfil-modal h3 {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+    color: var(--color-primary);
+    text-align: center;
+}
+
+.perfil-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #666;
+    padding: 4px;
+    line-height: 1;
+}
+
+.perfil-modal-close:hover {
+    color: #333;
+}
+
+.perfil-input-group {
+    margin-bottom: 14px;
+}
+
+.perfil-input-group label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: #555;
+    font-weight: 600;
+}
+
+.perfil-input-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.perfil-input-group input:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+}
+
+.perfil-modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.perfil-modal-actions button {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.perfil-modal-actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.perfil-modal-actions .cancel {
+    background: #f0f0f0;
+    color: #444;
+}
+
+.perfil-modal-actions .save {
+    background: var(--color-primary);
+    color: white;
+}
+
+/* ============================================
+   Coordinación Rítmica — Botón navbar
+   ============================================ */
+
+.coordinacion-btn {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.coordinacion-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ============================================
+   Coordinación Rítmica — Modal cancionero
+   ============================================ */
+
+#modalCancioneroPiano {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#modalCancioneroPiano .actividad-modal-content {
+    background: linear-gradient(165deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-lg);
+    box-shadow:
+        0 24px 80px rgba(0, 0, 0, 0.55),
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    width: 92%;
+    max-width: 420px;
+    height: auto;
+    max-height: 85vh;
+    position: relative;
+}
+
+/* Close button */
+
+.coordRitm_close {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    font-size: 22px;
+    font-weight: 300;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.4);
+    z-index: 10;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    background: transparent;
+    transition: all 0.25s ease;
+    line-height: 1;
+}
+
+.coordRitm_close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Container */
+
+.modalCancioneroPiano_container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Header */
+
+.modalCancioneroPiano_header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+    position: relative;
+}
+
+.modalCancioneroPiano_header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: var(--spacing-lg);
+    right: var(--spacing-lg);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+}
+
+/* Back button — minimalista */
+
+.coordRitm_back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    border-radius: var(--radius-full);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-4px);
+}
+
+.coordRitm_back.coordRitm_back_visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+
+.coordRitm_back:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.modalCancioneroPiano_header div {
+    min-width: 0;
+}
+
+.modalCancioneroPiano_header h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0 0 2px 0;
+    color: #fff;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: none;
+    background-color: transparent;
+    width: auto;
+    border-radius: 0;
+    text-align: left;
+    margin-top: 0;
+}
+
+.modalCancioneroPiano_header p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0;
+    font-weight: 400;
+}
+
+/* ============================================
+   Views — sistema de navegación
+   ============================================ */
+
+#modalCancioneroPiano_views {
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+}
+
+.coordRitm_vista {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+    min-height: 0;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+    will-change: transform, opacity;
+    margin-top: 77%;
+}
+
+/* Vista activa (centro) */
+.coordRitm_vista_active {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Vista a la izquierda (saliendo) */
+.coordRitm_vista_izquierda {
+    transform: translateX(-30%);
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+}
+
+/* Vista a la derecha (entrando) */
+.coordRitm_vista_derecha {
+    transform: translateX(30%);
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+}
+
+/* ============================================
+   Cards
+   ============================================ */
+
+.modalCancioneroPiano_card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+}
+
+.modalCancioneroPiano_card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modalCancioneroPiano_card:hover {
+    border-color: rgba(0, 123, 255, 0.3);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow:
+        0 8px 32px rgba(0, 123, 255, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+}
+
+.modalCancioneroPiano_card:hover::before {
+    opacity: 1;
+}
+
+.modalCancioneroPiano_card:active {
+    transform: translateY(0);
+    transition-duration: 0.1s;
+}
+
+/* Card header */
+
+.modalCancioneroPiano_cardHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.modalCancioneroPiano_cardHeader h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #fff;
+}
+
+.modalCancioneroPiano_icon {
+    font-size: 1.3rem;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+}
+
+/* Parte description (submenu) */
+
+.coordRitm_parteDesc {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+    margin: 2px 0 0 0;
+}
+
+/* Locked / Próximamente */
+
+.modalCancioneroPiano_locked {
+    opacity: 0.35;
+    cursor: default;
+    border-style: dashed;
+    border-color: rgba(255, 255, 255, 0.06);
+    pointer-events: none;
+    background: rgba(255, 255, 255, 0.015);
+}
+
+.modalCancioneroPiano_locked:hover {
+    border-color: rgba(255, 255, 255, 0.06);
+    box-shadow: none;
+    transform: none;
+}
+
+.modalCancioneroPiano_locked .modalCancioneroPiano_icon {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.modalCancioneroPiano_locked .modalCancioneroPiano_cardHeader h3 {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.modalCancioneroPiano_locked .coordRitm_parteDesc {
+    color: rgba(255, 255, 255, 0.2);
+    font-style: normal;
+}
+
+/* ============================================
+   Coordinación Rítmica — Interfaz de juego
+   ============================================ */
+
+/* --- Contenedor principal --- */
+
+#coordRitm_juego {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(165deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+    z-index: 5;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* --- Zonas --- */
+
+.coordRitm_zona {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-sm) var(--spacing-md);
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.coordRitm_zonaRitmo {
+    border-bottom: none;
+    box-shadow: inset 0 -8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.coordRitm_zonaPiano {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-top: none;
+    box-shadow: inset 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* --- Labels de jugador por zona --- */
+.coordRitm_zonaLabel {
+    position: absolute;
+    left: 5%;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 2px 10px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: all 0.25s ease;
+    z-index: 5;
+    white-space: nowrap;
+}
+.coordRitm_zonaLabel:hover {
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.1);
+}
+.coordRitm_zonaLabel_pianista {
+    bottom: 55%;
+    left: 2%;
+}
+.coordRitm_zonaLabel_percusionista {
+    top: 6px;
+    transform: rotate(180deg);
+    left: 2%;
+}
+.coordRitm_zonaLabel_input {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 200, 200, 0.4);
+    border-radius: 8px;
+    padding: 2px 6px;
+    width: 100px;
+    text-align: center;
+    outline: none;
+}
+
+/* Invertir instrumentDisplay y labels de percusión para el percusionista */
+.coordRitm_zonaRitmo .coordRitm_instrumentDisplay {
+    transform: rotate(180deg);
+}
+.coordRitm_zonaRitmo .coordRitm_percCapa::after {
+    transform: translateX(-50%) rotate(180deg);
+}
+.coordRitm_zonaRitmo .coordRitm_selectorInstrumento {
+    transform: rotate(180deg);
+}
+
+/* --- Barra de tiempo --- */
+
+/* --- Count-in overlay --- */
+
+.coordRitm_countIn_overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 10vw;
+    line-height: 1;
+    z-index: 100;
+    pointer-events: none;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.6);
+    transition: color 0.1s ease, text-shadow 0.1s ease;
+    animation: coordRitm_countIn_pulse 0.15s ease-out;
+}
+
+.coordRitm_countIn_fuerte {
+    color: #ffc107;
+    text-shadow: 0 0 32px rgba(255,193,7,0.7), 0 4px 24px rgba(0,0,0,0.6);
+}
+
+.coordRitm_countIn_suave {
+    color: #90caf9;
+    text-shadow: 0 0 24px rgba(144,202,249,0.5), 0 4px 24px rgba(0,0,0,0.6);
+}
+
+@keyframes coordRitm_countIn_pulse {
+    0%   { transform: translate(-50%, -50%) scale(1.3); opacity: 0.6; }
+    100% { transform: translate(-50%, -50%) scale(1);   opacity: 1;   }
+}
+
+/* --- Timeline --- */
+
+.coordRitm_timeline {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(10,10,30,0.6) 50%, rgba(0,0,0,0.4) 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.4),
+        0 -2px 12px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.coordRitm_timelineFila {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.coordRitm_timelineFilaInvertida {
+    transform: rotate(180deg);
+}
+
+.coordRitm_marcador {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.2);
+    padding: 4px 0;
+    text-align: center;
+    flex: 1;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.05em;
+    border-radius: 3px;
+    cursor: default;
+    position: relative;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+}
+
+.coordRitm_marcador:hover {
+    color: rgba(255, 255, 255, 0.4);
+    background: linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+        0 0 8px rgba(255, 255, 255, 0.03);
+    transform: scale(1.05);
+}
+
+.coordRitm_marcador:active {
+    transform: scale(0.92);
+    transition-duration: 0.08s;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 100%);
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.coordRitm_marcador_activo {
+    color: #fff;
+    background: linear-gradient(180deg, rgba(0,140,255,0.35) 0%, rgba(0,100,220,0.2) 50%, rgba(0,80,180,0.15) 100%);
+    box-shadow:
+        0 0 16px rgba(0, 123, 255, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+    transform: scale(1.1);
+    border-radius: 3px;
+    cursor: default;
+}
+
+.coordRitm_marcador_activo:active {
+    transform: scale(0.95);
+    transition-duration: 0.08s;
+}
+
+.coordRitm_marcador_golpe {
+    color: #fff;
+    background: linear-gradient(180deg, rgba(255,210,50,0.5) 0%, rgba(255,180,0,0.3) 50%, rgba(200,140,0,0.2) 100%);
+    box-shadow:
+        0 0 24px rgba(255, 193, 7, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 3px 6px rgba(0, 0, 0, 0.25);
+    text-shadow: 0 0 12px rgba(255, 193, 7, 0.8);
+    transform: scale(1.2);
+    border-radius: 3px;
+}
+
+/* --- Contenido del ritmo --- */
+
+.coordRitm_ritmoContenido {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: var(--spacing-md);
+    min-height: 0;
+    position: relative;
+    flex: 1;
+}
+
+.coordRitm_instrumentDisplay {
+    flex: 0 0 auto;
+}
+
+/* --- Divisores de cuadrantes --- */
+
+.coordRitm_divisorTiempo {
+    position: absolute;
+    top: 6%;
+    bottom: 6%;
+    width: 1px;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.06) 20%,
+        rgba(255, 255, 255, 0.12) 50%,
+        rgba(255, 255, 255, 0.06) 80%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.03);
+}
+
+/* --- Selector de instrumento --- */
+
+.coordRitm_selectorInstrumento {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 7vw;
+    margin-left: -2%;
+    gap: 6px;
+}
+
+.coordRitm_btnInstrumento {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 4px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.coordRitm_btnInstrumento:hover {
+    background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%);
+    color: rgba(255, 255, 255, 0.7);
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+}
+
+.coordRitm_btnInstrumento_activo {
+    background: linear-gradient(180deg, rgba(0,123,255,0.25) 0%, rgba(0,123,255,0.1) 100%);
+    border-color: rgba(0, 123, 255, 0.5);
+    color: #fff;
+    box-shadow:
+        0 0 16px rgba(0, 123, 255, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.coordRitm_instIcon {
+    font-size: 0.8rem;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+.coordRitm_instLabel {
+    font-weight: 500;
+    font-size: 0.8vw;
+}
+
+/* --- Representación visual del instrumento --- */
+.coordRitm_instrumentDisplay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5vh 0;
+    gap: 0.3vh;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.coordRitm_instDisplayZone {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.coordRitm_instDisplayAgudo {
+    color: rgba(100, 200, 255, 0.8);
+    background: rgba(100, 200, 255, 0.08);
+}
+
+.coordRitm_instDisplayGrave {
+    color: rgba(255, 140, 100, 0.8);
+    background: rgba(255, 140, 100, 0.08);
+}
+
+.coordRitm_instDisplayVisual {
+    width: 4vw;
+    height: 6vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+/* Bombo legüero visual */
+.coordRitm_bomboVisual {
+    position: relative;
+    width: 3.5vw;
+    height: 5.5vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.coordRitm_bomboAro {
+    width: 3.5vw;
+    height: 1vh;
+    border: 2px solid rgba(255, 200, 100, 0.6);
+    border-radius: 50%;
+    background: rgba(255, 200, 100, 0.08);
+}
+
+.coordRitm_bomboParche {
+    width: 3vw;
+    height: 3.5vh;
+    border: 2px solid rgba(255, 160, 80, 0.5);
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    background: rgba(255, 160, 80, 0.06);
+    margin-top: -0.3vh;
+}
+
+/* Cajón peruano visual */
+.coordRitm_cajonVisual {
+    position: relative;
+    width: 3vw;
+    height: 5.5vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.coordRitm_cajonTapa {
+    width: 3vw;
+    height: 0.8vh;
+    border: 2px solid rgba(180, 140, 100, 0.6);
+    border-radius: 2px 2px 0 0;
+    background: rgba(180, 140, 100, 0.1);
+}
+
+.coordRitm_cajonCuerpo {
+    width: 2.8vw;
+    height: 4vh;
+    border: 2px solid rgba(180, 140, 100, 0.4);
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+    background: rgba(180, 140, 100, 0.05);
+}
+
+/* --- Zona de percusión --- */
+.coordRitm_percZone {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+    margin: 0;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.coordRitm_percCapa {
+    flex: 1;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    transition: background 0.12s ease;
+    border: none;
+    outline: none;
+}
+
+.coordRitm_percAguda {
+    background: linear-gradient(0deg, rgba(100, 180, 255, 0.06) 0%, rgba(100, 180, 255, 0.02) 100%);
+}
+
+.coordRitm_percGrave {
+    background: linear-gradient(180deg, rgba(255, 120, 80, 0.06) 0%, rgba(255, 120, 80, 0.02) 100%);
+}
+
+/* Divisor visual central — solo referencia, no es zona táctil */
+.coordRitm_percDivisor {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    right: 5%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Labels como referencia, cerca del divisor */
+.coordRitm_percCapa::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.15;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+}
+
+.coordRitm_percAguda::after {
+    bottom: 2px;
+    color: rgba(100, 200, 255, 0.7);
+}
+
+.coordRitm_percGrave::after {
+    top: 2px;
+    color: rgba(255, 140, 100, 0.7);
+}
+
+.coordRitm_percCapa:active::after { opacity: 0.4; }
+
+.coordRitm_percCapa.flash {
+    animation: coordRitm_percFlash 0.2s ease-out;
+}
+
+.coordRitm_percAguda.flash {
+    background: linear-gradient(0deg, rgba(100, 200, 255, 0.2) 0%, rgba(100, 200, 255, 0.04) 100%);
+}
+
+.coordRitm_percGrave.flash {
+    background: linear-gradient(180deg, rgba(255, 140, 100, 0.2) 0%, rgba(255, 140, 100, 0.04) 100%);
+}
+
+@keyframes coordRitm_percFlash {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* --- Vista de percusión durante reproducción --- */
+
+.coordRitm_percZone.playing .coordRitm_percDivisor {
+    display: none;
+}
+
+.coordRitm_percVis {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    overflow: hidden;
+}
+
+.coordRitm_percTrack {
+    display: flex;
+    position: absolute;
+    inset: 0;
+}
+
+.coordRitm_percMeasure {
+    flex: 0 0 50%;
+    position: relative;
+}
+
+.coordRitm_percMeasure + .coordRitm_percMeasure {
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.coordRitm_percOval {
+    position: absolute;
+    height: 48%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50% / 35%;
+}
+
+.coordRitm_percOval::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: inherit;
+    background: conic-gradient(
+        from 0deg,
+        var(--oval-color, rgba(100,200,255,0.5)) calc(var(--progress, 0) * 360deg),
+        transparent calc(var(--progress, 0) * 360deg)
+    );
+    z-index: 1;
+}
+
+.coordRitm_percOval--agudo {
+    bottom: 8%;
+}
+
+.coordRitm_percOval--grave {
+    top: 8%;
+}
+
+.coordRitm_percOval--correcto {
+    border-color: rgba(100, 255, 180, 0.7);
+}
+
+.coordRitm_percOval--fallado {
+    border-color: rgba(255, 80, 80, 0.7);
+}
+
+.coordRitm_percOval--perfecto { border-color: #00e5ff; background: rgba(0, 229, 255, 0.25); }
+.coordRitm_percOval--bien { border-color: #76ff03; background: rgba(118, 255, 3, 0.25); }
+.coordRitm_percOval--adelantado { border-color: #ffab00; background: rgba(255, 171, 0, 0.25); }
+.coordRitm_percOval--tarde { border-color: #ffab00; background: rgba(255, 171, 0, 0.25); }
+.coordRitm_percOval--fallo { border-color: #ff1744; background: rgba(255, 23, 68, 0.25); }
+
+.coordRitm_percFeedback {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 1;
+    animation: coordRitm_percFeedbackFade 0.8s ease forwards;
+}
+
+.coordRitm_percOval--agudo > .coordRitm_percFeedback {
+    bottom: 100%;
+    margin-bottom: 4px;
+}
+
+.coordRitm_percOval--grave > .coordRitm_percFeedback {
+    top: 100%;
+    margin-top: 4px;
+}
+
+.coordRitm_percFeedback--perfecto { color: #00e5ff; }
+.coordRitm_percFeedback--bien { color: #76ff03; }
+.coordRitm_percFeedback--adelantado { color: #ffab00; }
+.coordRitm_percFeedback--tarde { color: #ffab00; }
+.coordRitm_percFeedback--fallo { color: #ff1744; }
+
+@keyframes coordRitm_percFeedbackFade {
+    0% { opacity: 1; transform: translateY(0); }
+    70% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-8px); }
+}
+
+/* --- Campo de círculos --- */
+
+.coordRitm_campoCirculos {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+}
+
+/* --- Piano --- */
+
+.coordRitm_piano {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    flex-shrink: 0;
+    height: clamp(70px, 12vh, 120px);
+    gap: 2px;
+    transform: rotate(180deg);
+    padding: 0 2px;
+}
+
+.coordRitm_tecla {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: var(--spacing-xs, 4px);
+    background: linear-gradient(180deg, #f5f5f5 0%, #ffffff 30%, #fafafa 100%);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-bottom-width: 3px;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.08s ease;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow:
+        inset 0 -2px 4px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.coordRitm_tecla:hover {
+    background: linear-gradient(180deg, #e8e8e8 0%, #f5f5f5 30%, #f0f0f0 100%);
+}
+
+.coordRitm_tecla:active,
+.coordRitm_tecla_activa {
+    background: linear-gradient(180deg, #90caf9 0%, #bbdefb 50%, #90caf9 100%) !important;
+    border-bottom-width: 1px;
+    transform: translateY(2px);
+    box-shadow:
+        inset 0 2px 8px rgba(0, 123, 255, 0.3),
+        0 0 12px rgba(0, 123, 255, 0.2);
+}
+
+.coordRitm_teclaLabel {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    transform: rotate(180deg);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.02em;
+}
+
+/* --- Teclas negras --- */
+
+.coordRitm_teclasNegras {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    pointer-events: none;
+    transform: rotate(180deg);
+}
+
+.coordRitm_teclaNegra {
+    position: absolute;
+    width: 4.0%;
+    height: 100%;
+    background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 40%, #111 100%);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0 0 4px 4px;
+    cursor: pointer;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.08s ease;
+    z-index: 2;
+    box-shadow:
+        inset 0 -2px 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 3px 6px rgba(0, 0, 0, 0.5),
+        0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.coordRitm_teclaNegra:active,
+.coordRitm_teclaNegra_activa {
+    background: linear-gradient(180deg, #1a237e 0%, #283593 40%, #0d1b5e 100%) !important;
+    border-top-color: rgba(100, 149, 237, 0.2);
+    box-shadow:
+        inset 0 2px 6px rgba(25, 118, 210, 0.4),
+        0 0 12px rgba(25, 118, 210, 0.3);
+    transform: translateY(1px);
+}
+
+.coordRitm_teclaNegra[data-nota="Do#3"]  { left: 4.7vw;  top: -3.7vw; }
+.coordRitm_teclaNegra[data-nota="Re#3"]  { left: 11.6vw; top: -3.7vw; }
+.coordRitm_teclaNegra[data-nota="Fa#3"]  { left: 25.4vw; top: -3.7vw; }
+.coordRitm_teclaNegra[data-nota="Sol#3"] { left: 32.2vw; top: -3.7vw; }
+.coordRitm_teclaNegra[data-nota="La#3"]  { left: 39vw;   top: -3.7vw; }
+.coordRitm_teclaNegra[data-nota="Do#4"]  { left: 52.6vw; top: -3.7vw; }
+.coordRitm_teclaNegra[data-nota="Re#4"]  { left: 59.6vw; top: -3.7vw; }
+.coordRitm_teclaNegra[data-nota="Fa#4"]  { left: 73.7vw; top: -3.7vw; }
+.coordRitm_teclaNegra[data-nota="Sol#4"] { left: 80vw;   top: -3.7vw; }
+.coordRitm_teclaNegra[data-nota="La#4"]  { left: 87vw;   top: -3.7vw; }
+
+/* --- Zona de animaciones (modo desafío) --- */
+
+.coordRitm_zonaAnimaciones {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    pointer-events: none;
+    min-height: 0;
+    padding: 0 2px;
+}
+
+/* --- Zona de feedback (entre piso y piano, modo desafío) --- */
+
+.coordRitm_feedbackZone {
+    height: 7%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.coordRitm_feedbackText {
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
+}
+
+.coordRitm_feedbackText.visible {
+    opacity: 1;
+}
+
+/* Línea de piso — las barras caen y chocan aquí */
+.coordRitm_floorLine {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    height: 3px;
+    background: rgba(100, 200, 255, 0.5);
+    border-radius: 2px;
+    z-index: 1;
+    box-shadow: 0 0 8px rgba(100, 200, 255, 0.3);
+}
+
+/* Barra que cae — cada nota es una barra */
+.coordRitm_fallingBar {
+    position: absolute;
+    border-radius: 4px;
+    background: rgba(100, 200, 255, 0.45);
+    border: 1px solid rgba(100, 200, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 0;
+    transition: opacity 0.08s ease;
+}
+
+.coordRitm_fallingBarText {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Círculos de ritmo --- */
+
+.coordRitm_circuloRitmo {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.coordRitm_circuloRitmo_externo {
+    position: absolute;
+    inset: 0;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+    animation: coordRitm_crecer 0.8s ease-out forwards;
+}
+
+.coordRitm_circuloRitmo_interno {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(circle, rgba(0,123,255,0.8) 0%, rgba(0,123,255,0.4) 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(0, 123, 255, 0.5);
+}
+
+.coordRitm_circuloRitmo_golpe {
+    position: absolute;
+    inset: 0;
+    border: 3px solid rgba(255, 193, 7, 0.8);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.5);
+    box-shadow: 0 0 16px rgba(255, 193, 7, 0.4);
+    animation: coordRitm_golpe 0.3s ease-out forwards;
+}
+
+@keyframes coordRitm_crecer {
+    from {
+        transform: scale(0.3);
+        opacity: 0.3;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes coordRitm_golpe {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* ============================================
+   Coordinación Rítmica — Draggable System
+   (Play + Salir + Peek)
+   ============================================ */
+
+.coordRitm_dragWrap {
+    position: fixed;
+    right: 50%;
+    top: 50%;
+    z-index: 30;
+    width: 0;
+    height: 0;
+}
+
+/* --- Peek: puntito guardador --- */
+.coordRitm_dragPeek {
+    position: fixed;
+    width: 16px;
+    height: 16px;
+    right: 8vw;
+    top: 42%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 22;
+}
+
+.coordRitm_dragPeek::before {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.coordRitm_dragPeek::after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.coordRitm_dragPeek:hover::after {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.coordRitm_dragPeekCounter {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 14px;
+    height: 14px;
+    border-radius: 7px;
+    background: rgba(0, 123, 255, 0.35);
+    border: 1px solid rgba(0, 123, 255, 0.5);
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.5rem;
+    font-weight: 700;
+    line-height: 14px;
+    text-align: center;
+    padding: 0 2px;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 2;
+}
+
+.coordRitm_dragPeekCounter.oculto {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.coordRitm_dragWrap.atrapando .coordRitm_dragPeekCounter {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.coordRitm_dragWrap.atrapando .coordRitm_dragPeek {
+    transform: scale(2.5);
+    background: rgba(0, 123, 255, 0.25);
+    border-color: rgba(0, 123, 255, 0.6);
+    box-shadow: 0 0 24px rgba(0, 123, 255, 0.4);
+}
+
+.coordRitm_dragWrap.atrapando .coordRitm_dragPeek::after {
+    background: rgba(0, 123, 255, 1);
+    transform: scale(1.6);
+}
+
+.coordRitm_dragPeekRing {
+    position: fixed;
+    width: 16px;
+    height: 16px;
+    right: 8vw;
+    top: 42%;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 123, 255, 0.4);
+    opacity: 0;
+    transform: scale(1);
+    pointer-events: none;
+    z-index: 21;
+}
+
+.coordRitm_dragWrap.atrapando .coordRitm_dragPeekRing {
+    animation: coordRitm_ringPulse 0.8s ease-out infinite;
+}
+
+@keyframes coordRitm_ringPulse {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(3.5); opacity: 0; }
+}
+
+/* --- Botones base — 3D badge --- */
+.coordRitm_dragBtn {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-bottom-color: rgba(0, 0, 0, 0.15);
+    border-right-color: rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    transition:
+        opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.3s ease,
+        background 0.3s ease,
+        transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
+    z-index: 21;
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.coordRitm_dragWrap.oculto .coordRitm_dragBtn {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.coordRitm_dragBtn.bloqueadoDesafio:not(.oculto) {
+    opacity: 0.3;
+    filter: grayscale(100%);
+    cursor: not-allowed;
+}
+
+.coordRitm_dragBtn:active {
+    cursor: grabbing;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.3),
+        0 0 1px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.15),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.08) !important;
+    transition-duration: 0.08s;
+}
+
+.coordRitm_dragBtn.arrastrando {
+    transform: none !important;
+    transition: none !important;
+}
+
+.coordRitm_dragBtn:hover {
+    background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.07) 100%);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.35),
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* --- Genérico: oculto para todos los botones drag (incluye play) --- */
+.coordRitm_dragBtn.oculto {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.5);
+}
+
+/* --- Botón Play (arco pavo real - derecha) --- */
+.coordRitm_dragBtn_play {
+    right: -37vw;
+    bottom: 10vh;
+}
+
+.coordRitm_dragBtn_play.playing {
+    background: linear-gradient(180deg, rgba(0,160,255,0.25) 0%, rgba(0,100,220,0.1) 100%);
+    border-color: rgba(0, 123, 255, 0.4);
+    border-bottom-color: rgba(0, 60, 140, 0.3);
+    box-shadow:
+        0 4px 12px rgba(0, 123, 255, 0.3),
+        0 1px 3px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(100, 200, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* --- Botón Salir (arco pavo real - derecha centro) --- */
+.coordRitm_dragBtn_salir {
+    right: -40vw;
+    bottom: 13vh;
+}
+
+.coordRitm_dragBtn_salir:hover {
+    background: linear-gradient(180deg, rgba(255,120,100,0.2) 0%, rgba(200,60,50,0.08) 100%);
+    border-color: rgba(255, 100, 80, 0.35);
+    box-shadow:
+        0 8px 16px rgba(255, 80, 60, 0.2),
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 180, 160, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.coordRitm_dragBtn_salir:active {
+    background: linear-gradient(180deg, rgba(255,100,80,0.12) 0%, rgba(255,120,100,0.2) 100%);
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.3),
+        inset 0 2px 6px rgba(200, 50, 40, 0.3),
+        inset 0 -1px 0 rgba(255, 180, 160, 0.08) !important;
+}
+
+/* Salir inicia oculto (se muestra al tocar peek) */
+.coordRitm_dragBtn_salir.oculto {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.5);
+}
+
+/* --- Botón Tempo (arco pavo real - centro, más alto) --- */
+.coordRitm_dragBtn_tempo {
+    right: -42vw;
+    bottom: 14vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden;
+}
+
+.coordRitm_dragBtn_tempo:hover {
+    background: linear-gradient(180deg, rgba(255,200,50,0.2) 0%, rgba(200,160,30,0.08) 100%);
+    border-color: rgba(255,200,50,0.35);
+    box-shadow:
+        0 8px 16px rgba(255,180,30,0.2),
+        0 2px 4px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,220,100,0.2),
+        inset 0 -1px 0 rgba(0,0,0,0.08);
+}
+
+.coordRitm_dragBtn_tempo:active {
+    box-shadow:
+        0 1px 3px rgba(0,0,0,0.3),
+        inset 0 2px 6px rgba(200,150,20,0.3),
+        inset 0 -1px 0 rgba(255,220,100,0.08) !important;
+}
+
+.coordRitm_dragBtnTempo_half {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.coordRitm_dragBtnTempo_half svg {
+    width: 18px;
+    height: 18px;
+    transition: all 0.15s ease;
+}
+
+.coordRitm_dragBtnTempo_up:hover svg {
+    stroke: rgba(100,255,100,0.9);
+    transform: scale(1.2) translateY(-1px);
+}
+
+.coordRitm_dragBtnTempo_down:hover svg {
+    stroke: rgba(255,100,100,0.9);
+    transform: scale(1.2) translateY(1px);
+}
+
+.coordRitm_dragBtnTempo_label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 800;
+    color: rgba(255,255,255,0.8);
+    white-space: nowrap;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    pointer-events: none;
+    line-height: 1;
+    padding: 2px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    width: 100%;
+    text-align: center;
+    background: rgba(255,255,255,0.04);
+}
+
+/* Tempo inicia oculto */
+.coordRitm_dragBtn_tempo.oculto {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.5);
+}
+
+/* --- Botón Loop (arco pavo real - izquierda centro) --- */
+.coordRitm_dragBtn_loop {
+    right: -44vw;
+    bottom: 13vh;
+}
+
+.coordRitm_dragBtn_loop:hover {
+    background: linear-gradient(180deg, rgba(100,200,255,0.2) 0%, rgba(80,160,220,0.08) 100%);
+    border-color: rgba(100,200,255,0.35);
+    box-shadow:
+        0 8px 16px rgba(100,180,255,0.2),
+        0 2px 4px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(150,220,255,0.2),
+        inset 0 -1px 0 rgba(0,0,0,0.08);
+}
+
+.coordRitm_dragBtn_loop:active {
+    background: linear-gradient(180deg, rgba(100,180,255,0.12) 0%, rgba(100,200,255,0.2) 100%);
+    box-shadow:
+        0 1px 3px rgba(0,0,0,0.3),
+        inset 0 2px 6px rgba(80,150,200,0.3),
+        inset 0 -1px 0 rgba(150,220,255,0.08) !important;
+}
+
+.coordRitm_dragBtn_loop.activo {
+    background: linear-gradient(180deg, rgba(100,255,150,0.25) 0%, rgba(80,200,120,0.1) 100%);
+    border-color: rgba(100,255,150,0.5);
+    box-shadow:
+        0 8px 20px rgba(100,255,150,0.3),
+        0 2px 4px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(150,255,180,0.3),
+        inset 0 -1px 0 rgba(0,0,0,0.08);
+}
+
+.coordRitm_dragBtn_loop.activo .coordRitm_dragIcon svg {
+    stroke: rgba(100,255,150,0.9);
+}
+
+/* Loop inicia oculto */
+.coordRitm_dragBtn_loop.oculto {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.5);
+}
+
+/* --- Botón Metrónomo (arco pavo real - izquierda) --- */
+.coordRitm_dragBtn_metro {
+    right: -47vw;
+    bottom: 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden;
+}
+
+.coordRitm_dragBtn_metro:hover {
+    background: linear-gradient(180deg, rgba(200,150,255,0.2) 0%, rgba(160,120,220,0.08) 100%);
+    border-color: rgba(200,150,255,0.35);
+    box-shadow:
+        0 8px 16px rgba(180,130,255,0.2),
+        0 2px 4px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(220,180,255,0.2),
+        inset 0 -1px 0 rgba(0,0,0,0.08);
+}
+
+.coordRitm_dragBtn_metro:active {
+    box-shadow:
+        0 1px 3px rgba(0,0,0,0.3),
+        inset 0 2px 6px rgba(160,120,220,0.3),
+        inset 0 -1px 0 rgba(220,180,255,0.08) !important;
+}
+
+.coordRitm_dragBtnMetro_half {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.coordRitm_dragBtnMetro_half svg {
+    width: 18px;
+    height: 18px;
+    transition: all 0.15s ease;
+}
+
+.coordRitm_dragBtnMetro_up:hover svg {
+    stroke: rgba(255,200,100,0.9);
+    transform: scale(1.2);
+}
+
+.coordRitm_dragBtnMetro_down:hover svg {
+    stroke: rgba(100,200,255,0.9);
+    transform: scale(1.2);
+}
+
+.coordRitm_dragBtnMetro_label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 800;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    pointer-events: none;
+    line-height: 1;
+    padding: 2px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    width: 100%;
+    text-align: center;
+    background: rgba(255,255,255,0.04);
+    transition: color 0.2s ease;
+}
+
+.coordRitm_dragBtn_metro.metroIntro .coordRitm_dragBtnMetro_up svg {
+    stroke: rgba(255,200,100,0.95);
+}
+
+.coordRitm_dragBtn_metro.metroCancion .coordRitm_dragBtnMetro_down svg {
+    stroke: rgba(100,200,255,0.95);
+}
+
+.coordRitm_dragBtn_metro.metroIntro.metroCancion .coordRitm_dragBtnMetro_label {
+    color: rgba(150,255,180,0.9);
+}
+
+/* Metro inicia oculto */
+.coordRitm_dragBtn_metro.oculto {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.5);
+}
+
+/* ─── Botón Tracks (Melodía + Percusión) ─── */
+
+.coordRitm_dragBtn_tracks {
+    right: -50vw;
+    bottom: 7vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden;
+}
+
+.coordRitm_dragBtn_tracks:hover {
+    background: linear-gradient(180deg, rgba(150,255,200,0.2) 0%, rgba(120,220,170,0.08) 100%);
+    border-color: rgba(150,255,200,0.35);
+    box-shadow:
+        0 8px 16px rgba(130,255,180,0.2),
+        0 2px 4px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(180,255,220,0.2),
+        inset 0 -1px 0 rgba(0,0,0,0.08);
+}
+
+.coordRitm_dragBtn_tracks:active {
+    box-shadow:
+        0 1px 3px rgba(0,0,0,0.3),
+        inset 0 2px 6px rgba(120,220,170,0.3),
+        inset 0 -1px 0 rgba(180,255,220,0.08) !important;
+}
+
+.coordRitm_dragBtnTracks_half {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.coordRitm_dragBtnTracks_half svg {
+    width: 18px;
+    height: 18px;
+    transition: all 0.15s ease;
+}
+
+.coordRitm_dragBtnTracks_up:hover svg {
+    stroke: rgba(100,255,180,0.9);
+    transform: scale(1.2);
+}
+
+.coordRitm_dragBtnTracks_down:hover svg {
+    stroke: rgba(255,180,100,0.9);
+    transform: scale(1.2);
+}
+
+.coordRitm_dragBtnTracks_label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 800;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    pointer-events: none;
+    line-height: 1;
+    padding: 2px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    width: 100%;
+    text-align: center;
+    background: rgba(255,255,255,0.04);
+    transition: color 0.2s ease;
+}
+
+.coordRitm_dragBtn_tracks.tracksMelodia .coordRitm_dragBtnTracks_up svg {
+    stroke: rgba(100,255,180,0.95);
+}
+
+.coordRitm_dragBtn_tracks.tracksPercusion .coordRitm_dragBtnTracks_down svg {
+    stroke: rgba(255,180,100,0.95);
+}
+
+.coordRitm_dragBtn_tracks.tracksMelodia.tracksPercusion .coordRitm_dragBtnTracks_label {
+    color: rgba(150,255,180,0.9);
+}
+
+.coordRitm_dragBtn_tracks.oculto {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.5);
+}
+
+/* --- Botón Swap (intercambiar roles) --- */
+.coordRitm_dragBtn_swap {
+    right: -53vw;
+    bottom: 4vh;
+}
+.coordRitm_dragBtnSwap_label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.5px;
+    transition: color 0.25s;
+}
+.coordRitm_dragBtn_swap:hover .coordRitm_dragBtnSwap_label {
+    color: rgba(255, 255, 255, 1);
+}
+.coordRitm_dragBtn_swap:hover {
+    background: linear-gradient(180deg, rgba(0, 200, 200, 0.2) 0%, rgba(0, 200, 200, 0.07) 100%);
+    box-shadow: 0 4px 12px rgba(0, 200, 200, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+.coordRitm_dragBtn_swap:active {
+    background: linear-gradient(180deg, rgba(0, 200, 200, 0.25) 0%, rgba(0, 200, 200, 0.1) 100%);
+}
+.coordRitm_dragBtn_swap.oculto {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.5);
+}
+
+/* --- Iconos --- */
+.coordRitm_dragIcon {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.coordRitm_dragIcon svg {
+    width: 100%;
+    height: 100%;
+    fill: rgba(255, 255, 255, 0.6);
+    transition: fill 0.25s;
+}
+
+.coordRitm_dragBtn:hover .coordRitm_dragIcon svg {
+    fill: rgba(255, 255, 255, 0.9);
+}
+
+.coordRitm_dragBtn.playing .coordRitm_dragIcon svg {
+    fill: rgba(0, 123, 255, 1);
+}
+
+.coordRitm_dragIcon_play,
+.coordRitm_dragIcon_pause {
+    opacity: 0;
+    transform: scale(0.4) rotate(-20deg);
+}
+
+.coordRitm_dragBtn[data-state="play"] .coordRitm_dragIcon_play {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+.coordRitm_dragBtn[data-state="pause"] .coordRitm_dragIcon_pause {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+/* --- Pulso al tocar (sin transform) --- */
+@keyframes coordRitm_dragPulse {
+    0% { box-shadow: 0 0 0 rgba(0, 123, 255, 0); }
+    35% { box-shadow: 0 0 20px rgba(0, 123, 255, 0.4), inset 0 0 12px rgba(0, 123, 255, 0.15); }
+    100% { box-shadow: 0 0 0 rgba(0, 123, 255, 0); }
+}
+
+.coordRitm_dragBtn.tocando {
+    animation: coordRitm_dragPulse 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* --- Glow al play --- */
+@keyframes coordRitm_dragGlow {
+    0% { box-shadow: 0 0 0 rgba(0, 123, 255, 0); }
+    50% { box-shadow: 0 0 30px rgba(0, 123, 255, 0.5); }
+    100% { box-shadow: 0 0 20px rgba(0, 123, 255, 0.2); }
+}
+
+.coordRitm_dragBtn.glow {
+    animation: coordRitm_dragGlow 0.6s ease-out;
+}
+
+/* --- Animación de atrapar: btn se encoge y desaparece --- */
+@keyframes coordRitm_beingCaught {
+    0% { transform: var(--drag-offset); opacity: 1; }
+    40% { transform: var(--drag-offset) scale(0.7); opacity: 0.9; }
+    100% { transform: var(--drag-offset) scale(0); opacity: 0; }
+}
+
+.coordRitm_dragBtn.atrapando {
+    animation: coordRitm_beingCaught 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    pointer-events: none;
+    cursor: default;
+}
+
+/* --- 3D pop-out cuando se acercan entre sí --- */
+.coordRitm_dragBtn.atrapadoNaranja,
+.coordRitm_dragBtn.atrapandoNaranja {
+    transform: perspective(400px) translateZ(18px) scale(1.08) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    border-bottom-color: rgba(0, 0, 0, 0.1) !important;
+    background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 100%) !important;
+    box-shadow:
+        0 14px 28px rgba(0, 0, 0, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* --- Wrap ocultándose --- */
+.coordRitm_dragWrap.guardando .coordRitm_dragBtn {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════
+   DESAFÍOS: Cards de nivel
+   ═══════════════════════════════════════════ */
+
+.coordRitm_cardNivel {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+}
+
+.coordRitm_cardNivel:hover:not(.coordRitm_cardNivel_bloqueado) {
+    border-color: rgba(0, 123, 255, 0.3);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: 0 8px 32px rgba(0, 123, 255, 0.12), 0 2px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+}
+
+.coordRitm_cardNivel_bloqueado {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.coordRitm_cardNivel_header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.coordRitm_cardNivel_header h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #fff;
+}
+
+.coordRitm_cardNivel_icon {
+    font-size: 1.3rem;
+}
+
+.coordRitm_cardNivel_footer {
+    display: flex;
+    gap: var(--spacing-sm);
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.coordRitm_cardNivel_bpm {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.coordRitm_cardNivel_vueltas {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.coordRitm_btnCompanion {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.coordRitm_btnCompanion:hover {
+    background: rgba(0, 123, 255, 0.3);
+    border-color: rgba(0, 123, 255, 0.5);
+    transform: scale(1.1);
+}
+
+.coordRitm_menuCompaneros {
+    background: rgba(20, 25, 35, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 200px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+.coordRitm_menuCompaneros_opcion {
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    text-align: left;
+    transition: background 0.2s ease;
+}
+
+.coordRitm_menuCompaneros_opcion:hover {
+    background: rgba(0, 123, 255, 0.25);
+}
+
+.coordRitm_menuCompaneros_titulo {
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 8px 14px 2px;
+}
+
+.coordRitm_menuCompaneros_subtitulo {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.75rem;
+    padding: 0 14px 6px;
+}
+
+.coordRitm_menuCompaneros_lista {
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.coordRitm_menuCompaneros_lista::-webkit-scrollbar {
+    width: 4px;
+}
+
+.coordRitm_menuCompaneros_lista::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+.coordRitm_menuCompaneros_input {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: #fff;
+    padding: 8px 12px;
+    margin: 4px 10px;
+    font-size: 0.85rem;
+    outline: none;
+    width: calc(100% - 24px);
+    box-sizing: border-box;
+}
+
+.coordRitm_menuCompaneros_input:focus {
+    border-color: rgba(0, 123, 255, 0.5);
+}
+
+.coordRitm_menuCompaneros_error {
+    color: rgba(255, 80, 80, 0.9);
+    font-size: 0.75rem;
+    padding: 2px 14px 4px;
+}
+
+.coordRitm_menuCompaneros_filaBtns {
+    display: flex;
+    gap: 4px;
+    padding: 4px 10px 6px;
+}
+
+.coordRitm_menuCompaneros_filaBtns .coordRitm_menuCompaneros_opcion {
+    flex: 1;
+    text-align: center;
+}
+
+.coordRitm_menuCompaneros_enviar {
+    background: rgba(0, 123, 255, 0.3);
+}
+
+.coordRitm_menuCompaneros_cerrar {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.coordRitm_menuCompaneros_desvincular {
+    color: #ff6b6b;
+    border-top: 1px solid rgba(255, 107, 107, 0.2);
+    margin-top: 2px;
+    padding-top: 8px;
+}
+
+.coordRitm_overlayConfirmacion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: coordRitm_fadeIn 0.3s ease;
+}
+
+.coordRitm_overlayConfirmacion_contenido {
+    background: rgba(20, 25, 35, 0.97);
+    border: 1px solid rgba(0, 200, 100, 0.3);
+    border-radius: 12px;
+    padding: 24px 32px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.coordRitm_overlayConfirmacion_icono {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.coordRitm_overlayConfirmacion_texto {
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+@keyframes coordRitm_fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.coordRitm_overlayAviso .coordRitm_overlayConfirmacion_contenido {
+    border-color: rgba(255, 170, 0, 0.4);
+}
+
+.coordRitm_overlayAviso .coordRitm_overlayConfirmacion_icono {
+    font-size: 1.6rem;
+}
+
+.coordRitm_overlayAviso .coordRitm_overlayConfirmacion_texto {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    max-width: 260px;
+}
+
+.coordRitm_overlayConfirmacion_filaBtns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.coordRitm_overlayConfirmacion_btn {
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.coordRitm_overlayConfirmacion_btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.coordRitm_overlayConfirmacion_btnConfirmar {
+    border-color: rgba(0, 200, 100, 0.5);
+    background: rgba(0, 200, 100, 0.15);
+}
+
+.coordRitm_overlayConfirmacion_btnConfirmar:hover {
+    background: rgba(0, 200, 100, 0.3);
+}
+
+.coordRitm_overlayConfirmacion_btnConfirmarRojo {
+    border-color: rgba(255, 80, 80, 0.5);
+    background: rgba(255, 80, 80, 0.15);
+}
+
+.coordRitm_overlayConfirmacion_btnConfirmarRojo:hover {
+    background: rgba(255, 80, 80, 0.3);
+}
+/* ── Diálogo de Términos de Uso ── */
+
+.coordRitm_overlayTerminos {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 11000;
+    animation: coordRitm_fadeIn 0.3s ease;
+}
+
+.coordRitm_overlayTerminos_contenido {
+    background: rgba(20, 25, 35, 0.98);
+    border: 1px solid rgba(0, 200, 255, 0.25);
+    border-radius: 14px;
+    padding: 28px 30px;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+    max-width: 400px;
+    width: 90%;
+}
+
+.coordRitm_overlayTerminos_icono {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
+
+.coordRitm_overlayTerminos_titulo {
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.coordRitm_overlayTerminos_texto {
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 6px;
+}
+
+.coordRitm_overlayTerminos_detalle {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    margin: 8px 0 16px;
+    padding: 10px 14px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border-left: 3px solid rgba(0, 200, 255, 0.3);
+    text-align: left;
+}
+
+.coordRitm_overlayTerminos_detalle li {
+    margin-bottom: 4px;
+    list-style: none;
+}
+
+.coordRitm_overlayTerminos_detalle li::before {
+    content: "• ";
+    color: rgba(0, 200, 255, 0.6);
+}
+
+.coordRitm_overlayTerminos_filaBtns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+.coordRitm_overlayTerminos_btn {
+    padding: 8px 24px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.coordRitm_overlayTerminos_btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.coordRitm_overlayTerminos_btnAceptar {
+    border-color: rgba(0, 200, 100, 0.5);
+    background: rgba(0, 200, 100, 0.15);
+    font-weight: 600;
+}
+
+.coordRitm_overlayTerminos_btnAceptar:hover {
+    background: rgba(0, 200, 100, 0.3);
+}
+
+.coordRitm_overlayTerminos_btnRechazar {
+    border-color: rgba(255, 80, 80, 0.4);
+    background: rgba(255, 80, 80, 0.1);
+}
+
+.coordRitm_overlayTerminos_btnRechazar:hover {
+    background: rgba(255, 80, 80, 0.25);
+}
+
+
+
+.coordRitm_estrellas {
+    font-size: 0.85rem;
+    margin-top: 2px;
+}
+
+.coordRitm_cardNivel_req {
+    font-size: 0.7rem;
+    color: rgba(255, 200, 100, 0.8);
+    margin: 2px 0 0;
+}
+
+.coordRitm_cardNivel_score {
+    font-size: 0.7rem;
+    color: rgba(100, 255, 180, 0.8);
+    margin: 2px 0 0;
+}
+
+/* ═══════════════════════════════════════════
+   DESAFÍOS: Overlay de resultados
+   ═══════════════════════════════════════════ */
+
+.coordRitm_resultados_overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 1.5vh 3vw;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    animation: coordRitm_fadeIn 0.3s ease;
+}
+
+.coordRitm_resultados_card {
+    background: linear-gradient(165deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    text-align: center;
+    width: 95vw;
+    max-width: 560px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+}
+
+.coordRitm_resultados_cardTop {
+    transform: rotate(180deg);
+}
+
+.coordRitm_resultados_center {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.coordRitm_resultados_icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.coordRitm_resultados_titulo {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: none;
+    background-color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.coordRitm_resultados_nombre {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: rgba(0, 229, 255, 0.85);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+.coordRitm_resultados_estrellas {
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.coordRitm_resultados_metricas {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.coordRitm_resultados_metrica {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.coordRitm_resultados_valor {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.coordRitm_resultados_label {
+    font-size: 0.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.coordRitm_resultados_detalle {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3px 5px;
+    font-size: 0.55rem;
+    font-weight: 600;
+}
+
+.coordRitm_resultados_detalle span {
+    padding: 1px 5px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.coordRitm_detalleperfecto { color: #00e5ff; }
+.coordRitm_detallebien { color: #76ff03; }
+.coordRitm_detalleadelantado { color: #ffab00; }
+.coordRitm_detalletarde { color: #ffab00; }
+.coordRitm_detallefallo { color: #ff1744; }
+
+.coordRitm_resultados_feedback {
+    margin-top: 6px;
+    padding: 6px 8px;
+    font-size: 0.6rem;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 6px;
+    border-left: 2px solid rgba(255, 255, 255, 0.15);
+    text-align: left;
+}
+
+.coordRitm_clase_barra {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    margin-top: 4px;
+    position: relative;
+}
+
+.coordRitm_clase_info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.coordRitm_clase_texto {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.coordRitm_clase_barra_fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes coordRitm_sparkleFly {
+    0% {
+        transform: translate(0, 0) scale(0.5);
+        opacity: 1;
+    }
+    30% {
+        transform: translate(calc(var(--sparkle-target-x) * 0.3), calc(var(--sparkle-y-off) * 1.5)) scale(1.2);
+        opacity: 1;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--sparkle-target-x), calc(var(--sparkle-y-off) * 0.5)) scale(0);
+        opacity: 0;
+    }
+}
+
+.coordRitm_clase_avanzando {
+    background: linear-gradient(90deg, #00e5ff, #76ff03);
+}
+
+.coordRitm_clase_trabada {
+    background: linear-gradient(90deg, #ffab00, #ff6d00);
+    box-shadow: 0 0 6px rgba(255, 171, 0, 0.4);
+}
+
+.coordRitm_clase_completo {
+    background: linear-gradient(90deg, #00e676, #00c853);
+    box-shadow: 0 0 6px rgba(0, 230, 118, 0.4);
+}
+
+.coordRitm_btnResultado {
+    flex: 1;
+    padding: 6px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.coordRitm_btnResultado:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(0, 123, 255, 0.4);
+}
+
+.coordRitm_btnReintentar {
+    background: rgba(0, 123, 255, 0.2);
+    border-color: rgba(0, 123, 255, 0.4);
+}
+
+.coordRitm_btnEnviarTelemetria {
+    background: rgba(0, 200, 83, 0.15);
+    border-color: rgba(0, 200, 83, 0.4);
+}
+
+.coordRitm_btnEnviarTelemetria:disabled {
+    cursor: default;
+}
+
+.coordRitm_btnEnviarTelemetria {
+    position: relative;
+    overflow: hidden;
+}
+
+.coordRitm_btnEnviarTelemetria .coordRitm_btnProgress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, rgba(0, 200, 83, 0.6), rgba(0, 255, 136, 0.9));
+    border-radius: 0 2px 0 0;
+    transition: width 0.3s ease;
+    z-index: 1;
+    box-shadow: 0 0 6px rgba(0, 200, 83, 0.5);
+}
+
+.coordRitm_btnEnviarTelemetria .coordRitm_btnProgress.coordRitm_btnProgress_pulse {
+    animation: coordRitm_btnProgressPulse 0.8s ease-in-out infinite;
+}
+
+.coordRitm_btnEnviarTelemetria .coordRitm_btnProgress.coordRitm_btnProgress_complete {
+    width: 100% !important;
+    transition: width 0.2s ease;
+    background: linear-gradient(90deg, rgba(0, 200, 83, 0.8), rgba(0, 255, 215, 1));
+    box-shadow: 0 0 10px rgba(0, 200, 83, 0.8);
+}
+
+@keyframes coordRitm_btnProgressPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.coordRitm_diagnostico {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 8px auto;
+    max-width: 340px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.coordRitm_diagnostico_titulo {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.coordRitm_diagnostico_row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.coordRitm_diagnostico_estado {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.coordRitm_diagnostico_breve {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    line-height: 1.4;
+}
+
+@keyframes coordRitm_fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
