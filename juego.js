@@ -3679,7 +3679,9 @@ return null;
                 const bloque = document.createElement("div");
                 bloque.className = "coordRitm_bloqueNegras " + bloques[clave].clase;
 
-                bloques[clave].notas.forEach((n) => {
+                // Invertir el orden dentro del bloque para que el piano quede
+                // simétrico y correcto (Fa#: La#, Sol#, Fa# | Do#: Re#, Do#).
+                bloques[clave].notas.slice().reverse().forEach((n) => {
                     const negra = document.createElement("button");
                     negra.className = "coordRitm_teclaNegra";
                     negra.dataset.nota = n.notaId;
