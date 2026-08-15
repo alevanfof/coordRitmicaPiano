@@ -4277,16 +4277,31 @@ input[type="checkbox"] {
     transform: translateY(1px);
 }
 
-.coordRitm_teclaNegra[data-nota="Do#3"]  { left: 4.7vw;  top: -3.7vw; }
-.coordRitm_teclaNegra[data-nota="Re#3"]  { left: 11.6vw; top: -3.7vw; }
-.coordRitm_teclaNegra[data-nota="Fa#3"]  { left: 25.4vw; top: -3.7vw; }
-.coordRitm_teclaNegra[data-nota="Sol#3"] { left: 32.2vw; top: -3.7vw; }
-.coordRitm_teclaNegra[data-nota="La#3"]  { left: 39vw;   top: -3.7vw; }
-.coordRitm_teclaNegra[data-nota="Do#4"]  { left: 52.6vw; top: -3.7vw; }
-.coordRitm_teclaNegra[data-nota="Re#4"]  { left: 59.6vw; top: -3.7vw; }
-.coordRitm_teclaNegra[data-nota="Fa#4"]  { left: 73.7vw; top: -3.7vw; }
-.coordRitm_teclaNegra[data-nota="Sol#4"] { left: 80vw;   top: -3.7vw; }
-.coordRitm_teclaNegra[data-nota="La#4"]  { left: 87vw;   top: -3.7vw; }
+/* --- Teclas negras agrupadas en bloques (alineación robusta) --- */
+/* Cada bloque es una unidad posicionada; dentro, las teclas se
+   distribuyen equitativamente (space-around) y no se desfasan entre sí.
+   Para ajustar, mové left/width de cada bloque. */
+.coordRitm_bloqueNegras {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    pointer-events: none;
+}
+
+.coordRitm_bloqueNegras .coordRitm_teclaNegra {
+    position: relative;
+    flex: 1 1 0;
+    width: auto;
+    height: 100%;
+}
+
+/* Posición de cada bloque (porcentaje del ancho del piano) */
+.coordRitm_bloqueNegras--do3 { left: 1.2%;  width: 14%; }
+.coordRitm_bloqueNegras--fa3 { left: 22%;   width: 20.4%; }
+.coordRitm_bloqueNegras--do4 { left: 49.1%; width: 14%; }
+.coordRitm_bloqueNegras--fa4 { left: 70.5%; width: 19%; }
 
 /* --- Zona de animaciones (modo desafío) --- */
 
@@ -5352,17 +5367,6 @@ input[type="checkbox"] {
         max-width: 1280px;
         margin: 0 auto;
     }
-
-    .coordRitm_teclaNegra[data-nota="Do#3"]  { left: 4.7%;  top: 0; }
-    .coordRitm_teclaNegra[data-nota="Re#3"]  { left: 11.6%; top: 0; }
-    .coordRitm_teclaNegra[data-nota="Fa#3"]  { left: 25.4%; top: 0; }
-    .coordRitm_teclaNegra[data-nota="Sol#3"] { left: 32.2%; top: 0; }
-    .coordRitm_teclaNegra[data-nota="La#3"]  { left: 39%;   top: 0; }
-    .coordRitm_teclaNegra[data-nota="Do#4"]  { left: 52.6%; top: 0; }
-    .coordRitm_teclaNegra[data-nota="Re#4"]  { left: 59.6%; top: 0; }
-    .coordRitm_teclaNegra[data-nota="Fa#4"]  { left: 73.7%; top: 0; }
-    .coordRitm_teclaNegra[data-nota="Sol#4"] { left: 80%;   top: 0; }
-    .coordRitm_teclaNegra[data-nota="La#4"]  { left: 87%;   top: 0; }
 }
 
 .coordRitm_overlayAviso .coordRitm_overlayConfirmacion_contenido {

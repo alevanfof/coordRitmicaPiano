@@ -3636,21 +3636,58 @@ return null;
             pianoEl.appendChild(tecla);
         });
 
-        // Teclas negras — capa absoluta encima
+        // Teclas negras — agrupadas en bloques para mantener la alineación.
+        // Bloque "do": Do# / Re#  |  Bloque "fa": Fa# / Sol# / La#  (por octava)
         if (notasNegrasVisibles.length > 0) {
             const capaNegras = document.createElement("div");
             capaNegras.className = "coordRitm_teclasNegras";
+
+            const bloques = {};
+            const orden = [];
 
             notasNegrasVisibles.forEach((notaId) => {
                 const nota = NOTAS[notaId];
                 if (!nota || nota.tipo !== "negra") return;
 
-                const negra = document.createElement("button");
-                negra.className = "coordRitm_teclaNegra";
-                negra.dataset.nota = notaId;
-                negra.dataset.midi = nota.midi;
+                const m = /^([A-Za-z]+)#(\d)$/.exec(notaId);
+                if (!m) return;
 
-                capaNegras.appendChild(negra);
+                const raiz = m[1];
+                const octava = m[2];
+                const tipo = (raiz === "Do" || raiz === "Re") ? "do" : "fa";
+                const clave = tipo + octava;
+
+                if (!bloques[clave]) {
+                    bloques[clave] = {
+                        clase: "coordRitm_bloqueNegras--" + clave,
+                        notas: []
+                    };
+                    orden.push(clave);
+                }
+                bloques[clave].notas.push({ notaId: notaId, midi: nota.midi });
+            });
+
+            // Orden de izquierda a derecha: por octava, "do" antes que "fa"
+            orden.sort((a, b) => {
+                const oa = parseInt(a.replace(/\D/g, ""), 10);
+                const ob = parseInt(b.replace(/\D/g, ""), 10);
+                if (oa !== ob) return oa - ob;
+                return a.indexOf("do") === 0 ? -1 : 1;
+            });
+
+            orden.forEach((clave) => {
+                const bloque = document.createElement("div");
+                bloque.className = "coordRitm_bloqueNegras " + bloques[clave].clase;
+
+                bloques[clave].notas.forEach((n) => {
+                    const negra = document.createElement("button");
+                    negra.className = "coordRitm_teclaNegra";
+                    negra.dataset.nota = n.notaId;
+                    negra.dataset.midi = n.midi;
+                    bloque.appendChild(negra);
+                });
+
+                capaNegras.appendChild(bloque);
             });
 
             pianoEl.appendChild(capaNegras);
