@@ -3679,9 +3679,10 @@ return null;
                 const bloque = document.createElement("div");
                 bloque.className = "coordRitm_bloqueNegras " + bloques[clave].clase;
 
-                // Invertir el orden dentro del bloque para que el piano quede
-                // simétrico y correcto (Fa#: La#, Sol#, Fa# | Do#: Re#, Do#).
-                bloques[clave].notas.slice().reverse().forEach((n) => {
+                // Ordenar siempre de grave a aguda (MIDI ascendente) para que
+                // todos los bloques sean congruentes: la nota más grave queda
+                // primero (arriba) en cada grupo, sin importar el orden de origen.
+                bloques[clave].notas.slice().sort((a, b) => a.midi - b.midi).forEach((n) => {
                     const negra = document.createElement("button");
                     negra.className = "coordRitm_teclaNegra";
                     negra.dataset.nota = n.notaId;

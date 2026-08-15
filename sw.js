@@ -1,4 +1,4 @@
-const CACHE = 'pianito-v7';
+const CACHE = 'pianito-v8';
 const ASSETS = [
   './',
   './index.html',
